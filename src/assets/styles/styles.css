@@ -838,6 +838,13 @@ footer a {
 		display: none;
 	}
 
+	.container-text {
+
+		padding: 3% 0 0 0;
+
+
+	}
+
 	.text-container-text {
 		display: none;
 	}
@@ -922,7 +929,7 @@ footer a {
 		width: 35%;
 	}
 
-	.menu button {
+	.menu a {
 		display: none;
 	}
 
