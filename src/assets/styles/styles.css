@@ -331,7 +331,7 @@ li {
 .inner-card {
 	display: grid;
 	grid-template-rows: min-content min-content min-content;
-	gap: 3%;
+	gap: 7%;
 	padding: 0 10% 0 10%;
 }
 
