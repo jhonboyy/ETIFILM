@@ -65,7 +65,7 @@ import KeenSlider from 'keen-slider'
 import 'keen-slider/keen-slider.min.css'
 
 export default {
-  name: 'Products',
+  name: 'ProductsSection',
   setup() {
     const sliderContainer = ref(null)
     let sliderInstance = null
