@@ -8,5 +8,10 @@ module.exports = {
       });
       return definitions;
     });
+  },
+  configureWebpack: {
+    optimization: {
+      minimize: true
+    }
   }
 }
