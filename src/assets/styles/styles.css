@@ -492,7 +492,7 @@ li {
 	flex-wrap: wrap;
 }
 
-.number-slide {
+.keen-slider__slide {
 	display: grid;
 	border-left: 2px solid #FFF;
 	align-items: top;
