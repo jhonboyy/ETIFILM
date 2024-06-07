@@ -17,35 +17,35 @@
               <img alt="ilustración de una caja siendo embalada con film transparente" src="/images/film.svg">
             </div>
           </div>
-          <div class="keen-slider__slide number-slide">
+          <div class="keen-slider__slide number-slide2">
             <h3>Precinto</h3>
             <h4>Acrílicos, base solvente y PVC de diferentes calidades, medidas y colores.</h4>
             <div class="svg-container-products">
               <img alt="ilustración de una caja y tres rollos de precinto al lado izquierdo" src="/images/Precinto.svg">
             </div>
           </div>
-          <div class="keen-slider__slide number-slide">
+          <div class="keen-slider__slide number-slide3">
             <h3>Big Bag</h3>
             <h4>Reutilizables de diferentes medidas, materiales, pesos y especificaciones.</h4>
             <div class="svg-container-products">
               <img alt="ilustración de un big bag lleno" src="/images/Bags.svg">
             </div>
           </div>
-          <div class="keen-slider__slide number-slide">
+          <div class="keen-slider__slide number-slide4">
             <h3>Fleje</h3>
             <h4>Polipropileno y reciclado para máquina y manual, en diferentes medidas.</h4>
             <div class="svg-container-products">
               <img alt="ilustración de una bobina de fleje" src="/images/Fleje.svg">
             </div>
           </div>
-          <div class="keen-slider__slide number-slide">
+          <div class="keen-slider__slide number-slide5">
             <h3>Poliolefina</h3>
             <h4>Bobinas semitubo de diferentes medidas y gramajes.</h4>
             <div class="svg-container-products">
               <img alt="ilustración de una bobina de poliolefina y una bandeja de comida embalada" src="/images/Poleolefina.svg">
             </div>
           </div>
-          <div class="keen-slider__slide number-slide">
+          <div class="keen-slider__slide number-slide6">
             <h3>Cordel</h3>
             <h4>Bobinas de cordel para máquinas industriales y manuales de tres cabos.</h4>
             <div class="svg-container-products">
@@ -60,8 +60,7 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import KeenSlider from 'keen-slider'
-
+import { useKeenSlider } from 'keen-slider/vue.es'
 import 'keen-slider/keen-slider.min.css'
 
 export default {
@@ -74,7 +73,7 @@ export default {
       if (sliderInstance) {
         sliderInstance.destroy()
       }
-      sliderInstance = new KeenSlider(sliderContainer.value, {
+      sliderInstance = new useKeenSlider(sliderContainer.value, {
         loop: true,
         slides: {
           perView: window.innerWidth <= 900 ? 1 : 2,
