@@ -1,8 +1,21 @@
 <template>
-    <footer>
-      <!-- Contenido del footer -->
-      <p>© Etifilm Embalajes Industriales</p>
-    </footer>
+      <footer id="footer">
+         <div class="footer-left">
+            <p>Etifilm Embalajes Industriales</p>
+            <a href="mailto:etifilm@gmail.com" style="text-decoration: underline !important;">etifilm@gmail.com</a>
+            <p>922 19 56 68 / 647 44 90 08</p>
+         </div>
+         <div class="footer-center">
+            <p>Calle Justicia, 45, 17B</p>
+            <p>38296, Canarias, España</p>
+            <p>La Laguna, Santa Cruz de Tenerife</p>
+         </div>
+         <div class="footer-right">         
+            <p>© Etifilm 2023</p>
+            <a href="./privacidad.html" target="_blank" style="text-decoration: underline !important;">Politica de privacidad y cookies</a>
+            <p>Web protegida por reCAPTCHA (<a href="https://policies.google.com/privacy">privacidad</a> | <a href="https://policies.google.com/terms">uso</a>)</p>
+         </div>
+      </footer>
   </template>
   
   <script>
