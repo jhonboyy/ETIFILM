@@ -973,7 +973,7 @@ footer a {
 	}
 
 	.show-menu {
-		display: grid !important;
+		display: grid;
 	}
 
 	/* ///////////////////////////MOBILE SECTION/////////////////////////// */

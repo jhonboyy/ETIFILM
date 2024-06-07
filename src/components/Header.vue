@@ -47,10 +47,10 @@
          const arrow = document.querySelector('.container-arrow');
          const menu = document.querySelector('.menu-mobile');
          const arrowUp = document.querySelector('.container-arrow-up');
-         let previousScrollPosition = window.pageYOffset;
+         let previousScrollPosition = window.scrollY;
  
          const toggleArrowAndMenu = () => {
-           const currentScrollPosition = window.pageYOffset;
+           const currentScrollPosition = window.scrollY;
            const atBottom = currentScrollPosition >= document.documentElement.scrollHeight - window.innerHeight;
            const atTop = currentScrollPosition === 0;
  
