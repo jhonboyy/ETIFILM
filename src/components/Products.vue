@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="container-slider">
-        <div id="my-keen-slider" class="keen-slider" ref="sliderContainer">
+        <div class="keen-slider" ref="sliderContainer">
           <div class="keen-slider__slide number-slide1">
             <h3>Film</h3>
             <h4>Film manual y de máquina estirables. Tenemos diferentes preestiros y de material reciclado.</h4>
@@ -57,80 +57,25 @@
     </div>
   </section>
 </template>
-
 <script>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useKeenSlider } from 'keen-slider/vue.es'
 import 'keen-slider/keen-slider.min.css'
 
 export default {
   name: 'ProductsSection',
-  setup() {
-    const sliderContainer = ref(null)
-    let sliderInstance = null
-
-    const initializeSlider = () => {
-      if (sliderInstance) {
-        sliderInstance.destroy()
-      }
-      sliderInstance = new useKeenSlider(sliderContainer.value, {
-        loop: true,
-        slides: {
-          perView: window.innerWidth <= 900 ? 1 : 2,
-        },
-        breakpoints: {
-          '(max-width: 900px)': {
-            slides: { perView: 1 }
-          },
-          '(min-width: 901px)': {
-            slides: { perView: 2 }
-          }
-        }
-      })
-
-      const buttonLeft = document.getElementById("button--left")
-      const buttonRight = document.getElementById("button--right")
-      const arrowLeft = document.getElementById("arrow--left")
-      const arrowRight = document.getElementById("arrow--right")
-
-      sliderInstance.on("move", (details) => {
-        if (details.relativeSlide === 0) {
-          arrowLeft.classList.add("hidden")
-        } else {
-          arrowLeft.classList.remove("hidden")
-        }
-        if (details.relativeSlide === details.size - 1) {
-          arrowRight.classList.add("hidden")
-        } else {
-          arrowRight.classList.remove("hidden")
-        }
-      })
-
-      buttonLeft.addEventListener("click", () => {
-        sliderInstance.prev()
-      })
-
-      buttonRight.addEventListener("click", () => {
-        sliderInstance.next()
-      })
-    }
-
-    onMounted(() => {
-      initializeSlider()
-      window.addEventListener("resize", initializeSlider)
+  setup(){
+    const [sliderContainer] = useKeenSlider({
+      slides: {
+        perView: 2,
+        spacing: 0,
+      },
     })
-
-    onBeforeUnmount(() => {
-      if (sliderInstance) {
-        sliderInstance.destroy()
-      }
-      window.removeEventListener("resize", initializeSlider)
-    })
-
     return { sliderContainer }
   }
-}
+};
 </script>
+
+
 
 <style scoped>
 
