@@ -3,8 +3,8 @@
     <div class="products">
       <h2>Productos</h2>
       <div class="container-nav">
-          <button type="button" aria-label="flecha a la izquierda" id="button--left"><object id="arrow--left" type="image/svg+xml" data="/images/arrow_left.svg"></object></button>
-          <button type="button" aria-label="flecha a la derecha" id="button--right"><object id="arrow--right" type="image/svg+xml" data="/images/arrow_right.svg"></object></button>
+          <button type="button" aria-label="flecha a la izquierda" id="button--left" @click="moveLeft"><object id="arrow--left" type="image/svg+xml" data="/images/arrow_left.svg"></object></button>
+          <button type="button" aria-label="flecha a la derecha" id="button--right" @click="moveRight"><object id="arrow--right" type="image/svg+xml" data="/images/arrow_right.svg"></object></button>
       </div>
         <div class="keen-slider" ref="sliderContainer">
           <div class="keen-slider__slide number-slide">
@@ -59,17 +59,34 @@ import 'keen-slider/keen-slider.min.css'
 
 export default {
   name: 'ProductsSection',
-  setup(){
-    const [sliderContainer] = useKeenSlider({
+  setup() {
+    const [sliderContainer, slider] = useKeenSlider({
       slides: {
         perView: 2,
         spacing: 0,
       },
-    })
-    return { sliderContainer }
+    });
+
+    // Función para mover el slider a la izquierda
+    const moveLeft = () => {
+      if (slider.value) {
+        slider.value.prev();
+      }
+    }
+
+    // Función para mover el slider a la derecha
+    const moveRight = () => {
+      if (slider.value) {
+        slider.value.next();
+      }
+    }
+
+    return { sliderContainer, moveLeft, moveRight }
   }
 };
 </script>
+
+
 
 
 
