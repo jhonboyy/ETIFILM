@@ -12,6 +12,7 @@
 *.swp
 *.lock
 **/.DS_Store
+send.php
 
 # Directorios de dependencias
 /node_modules/
@@ -26,7 +27,6 @@
 *.class
 
 # Archivos específicos de configuración del proyecto
-.env
 config.yml
 config.json
 
@@ -41,6 +41,7 @@ yarn.lock
 *.db
 *.sql
 *.sqlite
+*.env.local
 
 # Carpeta de cobertura de tests
 /coverage/
