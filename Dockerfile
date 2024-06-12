@@ -1,11 +1,23 @@
-# Usar la imagen base oficial de PHP con Apache
+# Usa la imagen base de PHP con Apache
 FROM php:7.4-apache
 
-# Copiar los archivos del proyecto PHP en el directorio público del servidor Apache
+# Establecer el nombre del servidor para evitar advertencias de Apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Instalar Composer globalmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copiar el contenido del directorio del proyecto al contenedor
 COPY . /var/www/html
 
-# Habilitar el módulo de Apache para manejar .htaccess y otros
-RUN a2enmod rewrite
+# Copiar el archivo .env.local al contenedor
+COPY .env.local /var/www/html/.env.local
 
-# Exponer el puerto 80 para acceder al servidor desde el host
-EXPOSE 80
+# Establecer el directorio de trabajo
+WORKDIR /var/www/html
+
+# Instalar dependencias de Composer
+RUN composer install
+
+# Habilitar el módulo rewrite de Apache
+RUN a2enmod rewrite
