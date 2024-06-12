@@ -9,11 +9,10 @@
     "build:dev": "vue-cli-service build --mode development"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
-    "bootstrap-vue": "^2.23.1",
     "core-js": "^3.8.3",
     "keen-slider": "^6.8.6",
     "vue": "^3.4.27",
+    "vue-recaptcha": "^3.0.0-alpha.6",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
