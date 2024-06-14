@@ -12,7 +12,7 @@
 *.swp
 *.lock
 **/.DS_Store
-send.php
+error_log.txt
 
 # Directorios de dependencias
 /node_modules/
