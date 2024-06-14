@@ -65,18 +65,14 @@ export default {
       });
       formData.append('consentimiento', this.consentimiento ? '1' : '');
       formData.append('token', token);
+            
+      const endpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://etifilm.vercel.app'
 
-      const endpoints = [
-        process.env.VUE_APP_ALLOWED_DOMAIN_1,
-        process.env.VUE_APP_ALLOWED_DOMAIN_2,
-        process.env.VUE_APP_ALLOWED_DOMAIN_3
-      ];
-      const selectedEndpoint = endpoints[Math.floor(Math.random() * endpoints.length)];
-
-      fetch(`${selectedEndpoint}/send.php`, {
+      fetch(`${endpoint}/send.php`, {
         method: 'POST',
         body: formData
       })
+
       .then(response => response.json())
       .then(this.handleResponse)
       .catch((error) => {
