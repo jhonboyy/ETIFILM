@@ -67,7 +67,7 @@ export default {
     formData[field.name] = field.value;
   });
 
-  const endpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://etifilm.vercel.app';
+  const endpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://etifilm.vercel.app/api';
 
   fetch(`${endpoint}/send`, {
     method: 'POST',
