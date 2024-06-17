@@ -8,8 +8,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 
 const app = express();
-app.set('trust proxy', true); // Configura Express para confiar en proxies
-app.use(morgan('combined'));
+app.use(morgan('combined')); 
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
@@ -29,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Endpoint para enviar correos
-app.post('/api/send', [
+app.post('/send', [
   body('name').notEmpty().withMessage('Nombre requerido'),
   body('email').isEmail().withMessage('Formato de email inválido'),
   body('token').notEmpty().withMessage('Token requerido'),
@@ -42,9 +41,11 @@ app.post('/api/send', [
     return res.status(400).json({ success: false, errors: errors.array() });
   }
 
+  // Datos del formulario
   const { name, email, company, phone, message, token } = req.body;
 
   try {
+    // Verificación reCAPTCHA
     const recaptchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
       params: {
           secret: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
@@ -57,6 +58,7 @@ app.post('/api/send', [
       return res.status(400).json({ success: false, message: 'Verification failed.' });
     }
 
+    // Configuración del transportador de correo
     let transporter;
     if (process.env.NODE_ENV === 'DEVELOPMENT') {
       transporter = nodemailer.createTransport({
@@ -76,6 +78,7 @@ app.post('/api/send', [
       });
     }
 
+    // Opciones de correo
     const mailOptions = {
       from: process.env.MAIL_SENDER,
       to: process.env.MAIL_RECIPIENT,
@@ -84,6 +87,7 @@ app.post('/api/send', [
       replyTo: email
     };
 
+    // Enviar correo
     await transporter.sendMail(mailOptions);
     res.json({ success: true, message: '¡El formulario ha sido enviado correctamente! 🥳🎉' });
   } catch (error) {

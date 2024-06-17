@@ -59,29 +59,25 @@ export default {
       });
     },
     sendFormData(token) {
-  const formData = {
-    token: token,
-    consentimiento: this.consentimiento ? '1' : ''
-  };
-  this.formFields.forEach(field => {
-    formData[field.name] = field.value;
-  });
+      const formData = new FormData();
+      this.formFields.forEach(field => {
+        formData.append(field.name, field.value);
+      });
+      formData.append('consentimiento', this.consentimiento ? '1' : '');
+      formData.append('token', token);
 
-  const endpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://etifilm.vercel.app/api';
+      const endpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://etifilm.vercel.app';
 
-  fetch(`${endpoint}/send`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-  })
-  .then(response => response.json())
-  .then(this.handleResponse)
-  .catch((error) => {
-    this.errorMessage = 'Error al enviar el formulario: ' + error.message;
-    this.submitting = false;
-  });
+      fetch(`${endpoint}/send`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(this.handleResponse)
+      .catch((error) => {
+        this.errorMessage = 'Error al enviar el formulario: ' + error.message;
+        this.submitting = false;
+      });
 },
 
     handleResponse(data) {
