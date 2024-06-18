@@ -33,6 +33,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Ruta GET en la raíz para verificar que el servidor está operando correctamente
+app.get('/', (req, res) => {
+  res.status(200).send('Bienvenido a la API de Etifilm');
+});
+
 app.use((req, res, next) => {
   console.log('Received request from origin:', req.origin);
   next();
@@ -70,11 +76,8 @@ app.post('/send', [
     return res.status(400).json({ success: false, errors: errors.array() });
   }
 
-  // Datos del formulario
   const { name, email, company, phone, message, token } = req.body;
 
-  // Verificación reCAPTCHA
-  console.log('Verifying reCAPTCHA token...');
   const recaptchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
     params: {
       secret: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
@@ -88,14 +91,13 @@ app.post('/send', [
   }
 
   const mailOptions = {
-    from: process.env.GMAIL_USER, // Tu correo de Gmail
-    to: process.env.MAIL_RECIPIENT, // Tu correo al que quieres recibir las notificaciones
+    from: process.env.GMAIL_USER,
+    to: process.env.MAIL_RECIPIENT,
     subject: 'FORMULARIO WEB | Nuevo mensaje',
     html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
     replyTo: email
   };
 
-  console.log('Sending email...');
   try {
     await transporter.sendMail(mailOptions);
     console.log('Email sent successfully');
