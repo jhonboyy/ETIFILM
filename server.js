@@ -12,20 +12,49 @@ app.use(morgan('combined'));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, 
+  max: 100,
 });
 app.use(limiter);
 
 const port = process.env.PORT || 3000;
-const domains = [process.env.ALLOWED_DOMAIN_1, process.env.ALLOWED_DOMAIN_2, process.env.ALLOWED_DOMAIN_3];
+const domains = [process.env.ALLOWED_DOMAIN_1, process.env.ALLOWED_DOMAIN_2];
 
 const corsOptions = {
-  origin: domains,
+  origin: function (origin, callback) {
+    if (!origin || domains.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   optionsSuccessStatus: 200
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  console.log('Received request from origin:', req.origin);
+  next();
+});
+
+// Configuración del transportador de correo
+let transporter;
+if (process.env.NODE_ENV === 'development') {
+  transporter = nodemailer.createTransport({
+    host: process.env.MAILHOG_HOST,
+    port: process.env.MAILHOG_PORT,
+    ignoreTLS: true
+  });
+} else {
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER, // Tu dirección de Gmail
+      pass: process.env.GMAIL_APP_PASS // Contraseña de aplicación de Gmail
+    }
+  });
+}
 
 // Endpoint para enviar correos
 app.post('/send', [
@@ -44,51 +73,32 @@ app.post('/send', [
   // Datos del formulario
   const { name, email, company, phone, message, token } = req.body;
 
+  // Verificación reCAPTCHA
+  console.log('Verifying reCAPTCHA token...');
+  const recaptchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
+    params: {
+      secret: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
+      response: token
+    }
+  });
+
+  if (!recaptchaResponse.data.success || (recaptchaResponse.data.score ?? 0) < 0.5) {
+    console.log('Fallo en la verificación de reCAPTCHA:', recaptchaResponse.data);
+    return res.status(400).json({ success: false, message: 'Verification failed.' });
+  }
+
+  const mailOptions = {
+    from: process.env.GMAIL_USER, // Tu correo de Gmail
+    to: process.env.MAIL_RECIPIENT, // Tu correo al que quieres recibir las notificaciones
+    subject: 'FORMULARIO WEB | Nuevo mensaje',
+    html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
+    replyTo: email
+  };
+
+  console.log('Sending email...');
   try {
-    // Verificación reCAPTCHA
-    const recaptchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
-      params: {
-          secret: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
-          response: token
-      }
-    });
-
-    if (!recaptchaResponse.data.success || (recaptchaResponse.data.score ?? 0) < 0.5) {
-      console.log('Fallo en la verificación de reCAPTCHA');
-      return res.status(400).json({ success: false, message: 'Verification failed.' });
-    }
-
-    // Configuración del transportador de correo
-    let transporter;
-    if (process.env.NODE_ENV === 'DEVELOPMENT') {
-      transporter = nodemailer.createTransport({
-        host: 'localhost',
-        port: 1025,
-        ignoreTLS: true 
-      });
-    } else {
-      transporter = nodemailer.createTransport({
-        host: 'smtp.resend.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: process.env.RESEND_USER,
-          pass: process.env.RESEND_PASS,
-        }
-      });
-    }
-
-    // Opciones de correo
-    const mailOptions = {
-      from: process.env.MAIL_SENDER,
-      to: process.env.MAIL_RECIPIENT,
-      subject: 'FORMULARIO WEB | Nuevo mensaje',
-      html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
-      replyTo: email
-    };
-
-    // Enviar correo
     await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
     res.json({ success: true, message: '¡El formulario ha sido enviado correctamente! 🥳🎉' });
   } catch (error) {
     console.log('Error al enviar el correo:', error.message);

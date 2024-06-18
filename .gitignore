@@ -13,6 +13,7 @@
 *.lock
 **/.DS_Store
 *.env
+*.env.local
 error_log.txt
 
 # Directorios de dependencias
