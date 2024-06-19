@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Endpoint para enviar correos
-app.post('/send', [
+app.post('/api/send', [
   body('name').notEmpty().withMessage('Nombre requerido'),
   body('email').isEmail().withMessage('Formato de email inválido'),
   body('token').notEmpty().withMessage('Token requerido'),

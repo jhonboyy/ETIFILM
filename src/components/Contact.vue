@@ -68,7 +68,7 @@ export default {
         ? process.env.VUE_APP_LOCAL_URL
         : process.env.VUE_APP_PRODUCTION_URL;
 
-      fetch(`${endpoint}/send`, {
+      fetch(`${endpoint}/api/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
