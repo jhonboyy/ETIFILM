@@ -12,10 +12,6 @@
   ],
   "routes": [
     {
-      "src": "/api/send",
-      "dest": "server.js"
-    },
-    {
       "src": "/",
       "dest": "/dist/index.html"
     }
