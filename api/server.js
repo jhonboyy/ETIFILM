@@ -55,10 +55,12 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   transporter = nodemailer.createTransport({
     service: 'gmail',
-    secure: false,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
-      user: process.env.GMAIL_USER, // Tu dirección de Gmail
-      pass: process.env.GMAIL_APP_PASS // Contraseña de aplicación de Gmail
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASS
     }
   });
 }
