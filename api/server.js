@@ -95,15 +95,13 @@ app.post('/api/send', [
     console.log('Fallo en la verificación de reCAPTCHA:', recaptchaResponse.data);
     return res.status(400).json({ success: false, message: 'Verification failed.' });
   }
-
   const mailOptions = {
     from: process.env.GMAIL_USER,
-    to: process.env.MAIL_RECIPIENT,
-    subject: 'FORMULARIO WEB | Nuevo mensaje',
+    to: [process.env.MAIL_RECIPIENT, process.env.MAIL_RECIPIENT_2],
+    subject: `FORMULARIO WEB | ${company}`,
     html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
     replyTo: email
   };
-
   try {
     await transporter.sendMail(mailOptions);
     console.log('Email sent successfully');
@@ -114,7 +112,7 @@ app.post('/api/send', [
   }
 });
 
-app.set('trust proxy', 'loopback'); // Confía en proxies locales
+app.set('trust proxy', 'loopback');
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

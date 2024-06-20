@@ -3,7 +3,7 @@
     <div class="form-container">
       <h2>Solicita tu presupuesto</h2>
       <p>Explícanos qué necesitas y te contactaremos lo antes posible.</p>
-      <form class="contact-form" v-if="showForm" @submit.prevent="handleSubmit">
+      <form v-if="showForm && !submitting" class="contact-form" @submit.prevent="handleSubmit">
         <div class="form-field" v-for="field in formFields" :key="field.id">
           <input :type="field.type" v-model="field.value" :placeholder="field.placeholder" :name="field.name" :class="field.inputClass" :pattern="field.pattern" :inputmode="field.inputMode" required>
         </div>
@@ -15,8 +15,10 @@
           <button class="button-send" type="submit">Enviar</button>
         </div>
       </form>
-      <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
+      <!-- Mensajes de estado -->
+      <div v-if="submitting" class="message success">Enviando el formulario...</div>
       <div v-if="successMessage" class="message success">{{ successMessage }}</div>
+      <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
     </div>
     <div class="contact-container-svg">
       <img alt="ilustración de un personaje atrapado siendo embalado en una caja de film" src="images/Etifilm_5.svg">
@@ -45,67 +47,66 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      this.submitting = true;
-      this.errorMessage = '';
-      this.successMessage = '';
-      grecaptcha.ready(() => {
-        grecaptcha.execute(process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY, {action: 'submit'}).then(token => {
-          this.sendFormData(token);
-        }).catch(error => {
-          this.errorMessage = 'Error de reCAPTCHA: ' + error.message;
-          this.submitting = false;
-        });
-      });
-    },
-    sendFormData(token) {
-      const formData = {
-        consentimiento: this.consentimiento ? '1' : '',
-        token: token,
-        ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
-      };
-      const endpoint = process.env.NODE_ENV === 'development'
-        ? process.env.VUE_APP_LOCAL_URL
-        : process.env.VUE_APP_PRODUCTION_URL;
-
-      fetch(`${endpoint}/api/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        return response.json();
-      })
-      .then(this.handleResponse)
-      .catch((error) => {
-        this.errorMessage = `Error al enviar el formulario: ${error.message}`;
+  handleSubmit() {
+    this.submitting = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    grecaptcha.ready(() => {
+      grecaptcha.execute(process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY, {action: 'submit'}).then(token => {
+        this.sendFormData(token);
+      }).catch(error => {
+        this.errorMessage = 'Error de reCAPTCHA: ' + error.message;
         this.submitting = false;
       });
-    },
-    handleResponse(data) {
+    });
+  },
+  sendFormData(token) {
+    const formData = {
+      consentimiento: this.consentimiento ? '1' : '',
+      token: token,
+      ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
+    };
+    const endpoint = process.env.NODE_ENV === 'development'
+      ? process.env.VUE_APP_LOCAL_URL
+      : process.env.VUE_APP_PRODUCTION_URL;
+
+    fetch(`${endpoint}/api/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      return response.json();
+    })
+    .then(this.handleResponse)
+    .catch((error) => {
+      this.errorMessage = `Error al enviar el formulario: ${error.message}`;
       this.submitting = false;
+    });
+  },
+  handleResponse(data) {
+    this.submitting = false;
+    if (data.success) {
+      this.successMessage = data.message;
       this.showForm = false;
-      if (data.success) {
-        this.successMessage = data.message;
-      } else {
-        this.errorMessage = data.message;
-      }
-      setTimeout(() => {
-        this.resetForm();
-      }, 3000);
-    },
-    resetForm() {
-      this.formFields.forEach(field => {
-        field.value = '';
-      });
-      this.consentimiento = false;
-      this.errorMessage = '';
-      this.successMessage = '';
-      this.showForm = true;
+      setTimeout(this.resetForm, 3000);
+    } else {
+      this.errorMessage = data.message;
+      setTimeout(this.resetForm, 3000);
     }
+  },
+  resetForm() {
+    this.formFields.forEach(field => {
+      field.value = '';
+    });
+    this.consentimiento = false;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.showForm = true; 
   }
+}
 }
 </script>
