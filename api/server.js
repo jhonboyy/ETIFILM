@@ -55,6 +55,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   transporter = nodemailer.createTransport({
     service: 'gmail',
+    secure: false,
     auth: {
       user: process.env.GMAIL_USER, // Tu dirección de Gmail
       pass: process.env.GMAIL_APP_PASS // Contraseña de aplicación de Gmail
@@ -108,6 +109,7 @@ app.post('/api/send', [
   }
 });
 
+app.set('trust proxy', true);
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
