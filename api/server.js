@@ -96,8 +96,7 @@ app.post('/api/send', [
     return res.status(400).json({ success: false, message: 'Verification failed.' });
   }
   const mailOptions = {
-    from: `"${name}" <${email}>`,
-    sender: `${email}`,
+    from: `${email}`,
     to: [process.env.MAIL_RECIPIENT, process.env.MAIL_RECIPIENT_2],
     subject: `FORMULARIO WEB | ${company}`,
     html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
