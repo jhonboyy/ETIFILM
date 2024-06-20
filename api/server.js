@@ -114,7 +114,7 @@ app.post('/api/send', [
   }
 });
 
-app.set('trust proxy', true); // Asegúrate de que esto esté configurado correctamente
+app.set('trust proxy', 'loopback'); // Confía en proxies locales
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
