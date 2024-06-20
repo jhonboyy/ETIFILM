@@ -1,19 +1,23 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 const cors = require('cors');
 const { body, validationResult } = require('express-validator');
 require('dotenv').config({ path: './.env' });
-const rateLimit = require('express-rate-limit');
-const morgan = require('morgan');
 
 const app = express();
-app.use(morgan('combined')); 
+app.use(morgan('combined'));
 
+// Configurar rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100,
+  standardHeaders: true, // Para mostrar los encabezados de rate limit en la respuesta
+  legacyHeaders: false, // Desactivar encabezados obsoletos
 });
+
 app.use(limiter);
 
 const port = process.env.PORT || 3000;
@@ -34,13 +38,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Ruta GET en la raíz para verificar que el servidor está operando correctamente
 app.get('/', (req, res) => {
   res.status(200).send('Bienvenido a la API de Etifilm');
 });
 
 app.use((req, res, next) => {
-  console.log('Received request from origin:', req.origin);
+  console.log('Received request from origin:', req.get('origin'));
   next();
 });
 
@@ -111,7 +114,8 @@ app.post('/api/send', [
   }
 });
 
-app.set('trust proxy', true);
+app.set('trust proxy', true); // Asegúrate de que esto esté configurado correctamente
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
