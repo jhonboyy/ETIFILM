@@ -97,7 +97,7 @@ app.post('/api/send', [
   }
   const mailOptions = {
     from: `"${name}" <${email}>`,
-    sender: process.env.GMAIL_USER,
+    sender: `${email}`,
     to: [process.env.MAIL_RECIPIENT, process.env.MAIL_RECIPIENT_2],
     subject: `FORMULARIO WEB | ${company}`,
     html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
