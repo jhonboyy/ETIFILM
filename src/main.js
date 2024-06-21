@@ -1,9 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import './assets/styles/styles.css';
-import {Analytics} from '@vercel/analytics';
+import { inject } from "@vercel/analytics"
 
-<Analytics />
-
-
+inject();
 createApp(App).mount('#app');
