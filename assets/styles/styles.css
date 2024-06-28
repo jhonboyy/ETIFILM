@@ -54,7 +54,7 @@ button, input {
 }
 @font-face {
 	font-family: 'AcidGrotesk';
-	src: local('AcidGrotesk'), url('public/fonts/FFF-AcidGrotesk-Light-TRIAL.otf') format('opentype');
+	src: local('AcidGrotesk'), url('assets/fonts/FFF-AcidGrotesk-Light-TRIAL.otf') format('opentype');
 	font-display: swap;
 }
 /* ///////////////////////////////////////////////////// SECTION 1 ///////////////////////////////////////////////////// */

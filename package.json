@@ -10,8 +10,27 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/recaptcha": "^1.1.2",
+    "@types/cors": "^2.8.17",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/morgan": "^1.9.9",
+    "axios": "^1.7.2",
+    "express": "^4.19.2",
     "keen-slider": "^6.8.6",
+    "nodemailer": "^6.9.14",
     "nuxt": "^3.12.2",
+    "nuxt-mail": "^5.0.1",
     "vue": "latest"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.18.1",
+    "@nuxtjs/auth": "^4.9.1",
+    "@nuxtjs/axios": "^5.13.6",
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.21",
+    "@types/express-validator": "^3.0.0",
+    "@types/node": "^20.14.9",
+    "@types/nodemailer": "^6.4.15",
+    "typescript": "^5.5.2"
   }
 }

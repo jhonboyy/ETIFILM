@@ -1,5 +1,5 @@
-export default {
-  // Global page headers: https://go.nuxtjs.dev/config-head
+
+export default defineNuxtConfig({
   head: {
     title: 'ETIFILM',
     htmlAttrs: {
@@ -15,28 +15,49 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [ 
-    'public/styles/styles.css'
+  css: [
+    '~/assets/styles/styles.css'
   ],
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/recaptcha.client.js'
   ],
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxt/typescript-build'
   ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    'nuxt-mail'
   ],
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
+  build: {},
+  mail: {
+    message: {
+      to: process.env.MAIL_RECIPIENT
+    },
+    smtp: {
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASS
+      }
+    }
+  },
+  publicRuntimeConfig: {
+    grecaptcha: {
+      hideBadge: true,
+      mode: "base",
+      siteKey: process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY,
+      version: 3
+    }
+  },
+  privateRuntimeConfig: {
+    recaptchaSecretKey: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
+    mail: {
+      smtp: {
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASS
+        }
+      }
+    }
   }
-}
+});

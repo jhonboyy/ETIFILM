@@ -15,7 +15,6 @@
           <button class="button-send" type="submit">Enviar</button>
         </div>
       </form>
-      <!-- Mensajes de estado -->
       <div v-if="submitting" class="message success">Enviando el formulario...</div>
       <div v-if="successMessage" class="message success">{{ successMessage }}</div>
       <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
@@ -27,7 +26,8 @@
 </template>
 
 <script>
-/* global grecaptcha */
+import { useNuxtApp } from '#app';
+
 export default {
   name: 'ContactSection',
   data() {
@@ -47,66 +47,59 @@ export default {
     };
   },
   methods: {
-  handleSubmit() {
-    this.submitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-    grecaptcha.ready(() => {
-      grecaptcha.execute(process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY, {action: 'submit'}).then(token => {
-        this.sendFormData(token);
-      }).catch(error => {
-        this.errorMessage = 'Error de reCAPTCHA: ' + error.message;
-        this.submitting = false;
-      });
-    });
-  },
-  sendFormData(token) {
-    const formData = {
-      consentimiento: this.consentimiento ? '1' : '',
-      token: token,
-      ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
-    };
-    const endpoint = process.env.NODE_ENV === 'development'
-      ? process.env.VUE_APP_LOCAL_URL
-      : process.env.VUE_APP_PRODUCTION_URL;
+    async handleSubmit() {
+      this.submitting = true;
+      this.errorMessage = '';
+      this.successMessage = '';
 
-    fetch(`${endpoint}/api/send`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => {
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-      return response.json();
-    })
-    .then(this.handleResponse)
-    .catch((error) => {
-      this.errorMessage = `Error al enviar el formulario: ${error.message}`;
+      console.log('Form submitted, loading reCAPTCHA...');
+
+      try {
+        const nuxtApp = useNuxtApp();
+        if (nuxtApp.$recaptcha && nuxtApp.$recaptcha.execute) {
+          const token = await nuxtApp.$recaptcha.execute('submit');
+          console.log('reCAPTCHA token obtained:', token);
+
+          const formData = {
+            consentimiento: this.consentimiento ? '1' : '',
+            recaptcha: token,
+            ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
+          };
+
+          console.log('Sending form data:', formData);
+
+          const response = await this.$axios.post('/api/send-mail', formData);
+
+          if (response.data.success) {
+            console.log('Form submission successful:', response.data);
+            this.successMessage = response.data.message;
+            this.showForm = false;
+            setTimeout(this.resetForm, 3000);
+          } else {
+            console.error('Form submission error:', response.data.message);
+            this.errorMessage = response.data.message;
+            setTimeout(this.resetForm, 3000);
+          }
+        } else {
+          console.error('reCAPTCHA execution failed: $recaptcha is not defined');
+        }
+      } catch (error) {
+        console.error('Error during form submission:', error);
+        this.errorMessage = `Error al enviar el formulario: ${error.message}`;
+        setTimeout(this.resetForm, 3000);
+      }
+
       this.submitting = false;
-    });
-  },
-  handleResponse(data) {
-    this.submitting = false;
-    if (data.success) {
-      this.successMessage = data.message;
-      this.showForm = false;
-      setTimeout(this.resetForm, 3000);
-    } else {
-      this.errorMessage = data.message;
-      setTimeout(this.resetForm, 3000);
+    },
+    resetForm() {
+      this.formFields.forEach(field => {
+        field.value = '';
+      });
+      this.consentimiento = false;
+      this.errorMessage = '';
+      this.successMessage = '';
+      this.showForm = true;
     }
-  },
-  resetForm() {
-    this.formFields.forEach(field => {
-      field.value = '';
-    });
-    this.consentimiento = false;
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.showForm = true; 
   }
-}
 }
 </script>

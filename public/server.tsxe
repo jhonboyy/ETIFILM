@@ -1,11 +1,13 @@
-const express = require('express');
-const rateLimit = require('express-rate-limit');
-const morgan = require('morgan');
-const nodemailer = require('nodemailer');
-const axios = require('axios');
-const cors = require('cors');
-const { body, validationResult } = require('express-validator');
-require('dotenv').config({ path: './.env' });
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
+import nodemailer from 'nodemailer';
+import axios from 'axios';
+import cors from 'cors';
+import { body, validationResult } from 'express-validator';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(morgan('combined'));
@@ -14,8 +16,8 @@ app.use(morgan('combined'));
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100,
-  standardHeaders: true, // Para mostrar los encabezados de rate limit en la respuesta
-  legacyHeaders: false, // Desactivar encabezados obsoletos
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 app.use(limiter);
@@ -23,7 +25,7 @@ app.use(limiter);
 const port = process.env.PORT || 3000;
 const domains = [process.env.ALLOWED_DOMAIN_1, process.env.ALLOWED_DOMAIN_2];
 
-const corsOptions = {
+const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
     if (!origin || domains.includes(origin)) {
       callback(null, true);
@@ -47,12 +49,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Configuración del transportador de correo
-let transporter;
+let transporter: nodemailer.Transporter;
 if (process.env.NODE_ENV === 'development') {
   transporter = nodemailer.createTransport({
     host: process.env.MAILHOG_HOST,
-    port: process.env.MAILHOG_PORT,
+    port: parseInt(process.env.MAILHOG_PORT || '1025', 10),
     ignoreTLS: true
   });
 } else {
@@ -68,8 +69,7 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-// Endpoint para enviar correos
-app.post('/api/send', [
+app.post('/send', [
   body('name').notEmpty().withMessage('Nombre requerido'),
   body('email').isEmail().withMessage('Formato de email inválido'),
   body('token').notEmpty().withMessage('Token requerido'),
@@ -84,26 +84,28 @@ app.post('/api/send', [
 
   const { name, email, company, phone, message, token } = req.body;
 
-  const recaptchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
-    params: {
-      secret: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
-      response: token
-    }
-  });
-
-  if (!recaptchaResponse.data.success || (recaptchaResponse.data.score ?? 0) < 0.5) {
-    console.log('Fallo en la verificación de reCAPTCHA:', recaptchaResponse.data);
-    return res.status(400).json({ success: false, message: 'Verification failed.' });
-  }
-  const mailOptions = {
-    from: `"${name}" <${email}>`,
-    sender: process.env.GMAIL_USER,
-    to: [process.env.MAIL_RECIPIENT],
-    subject: `FORMULARIO WEB | ${company}`,
-    html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
-    replyTo: email
-  };
   try {
+    const recaptchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
+      params: {
+        secret: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
+        response: token
+      }
+    });
+
+    if (!recaptchaResponse.data.success || (recaptchaResponse.data.score ?? 0) < 0.5) {
+      console.log('Fallo en la verificación de reCAPTCHA:', recaptchaResponse.data);
+      return res.status(400).json({ success: false, message: 'Verification failed.' });
+    }
+
+    const mailOptions = {
+      from: `"${name}" <${email}>`,
+      sender: process.env.GMAIL_USER,
+      to: [process.env.MAIL_RECIPIENT],
+      subject: `FORMULARIO WEB | ${company}`,
+      html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
+      replyTo: email
+    };
+
     await transporter.sendMail(mailOptions);
     console.log('Email sent successfully');
     res.json({ success: true, message: '¡El formulario ha sido enviado correctamente! 🥳🎉' });
@@ -119,4 +121,4 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-module.exports = app;
+export default app;
