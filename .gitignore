@@ -1,49 +1,27 @@
-# Plantilla básica de .gitignore
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
 
-# Ignorar directorios de configuración de IDE/editores
-/.idea/
-/.vscode/
-*.sublime-workspace
-
-# Archivos temporales y de sistema
-*.log
-*.tmp
-*.bak
-*.swp
-*.lock
-**/.DS_Store
-*.env
-*.env.local
-error_log.txt
-
-# Directorios de dependencias
-/node_modules/
-/OLD_etifilm/
-/vendor/
-
-# Archivos de compilación y directorios de salida
-/build/
-/dist/
-/out/
-*.o
-*.class
-
-# Archivos específicos de configuración del proyecto
-config.yml
-config.json
-
-# Archivos de paquetes y lockfiles
-*.jar
-*.war
-*.ear
+# Node dependencies
+node_modules
 package-lock.json
-yarn.lock
 
-# Ignorar archivos de bases de datos locales
-*.db
-*.sql
-*.sqlite
-*.env.local
+# Logs
+logs
+*.log
 
-# Carpeta de cobertura de tests
-/coverage/
+# Misc
+.DS_Store
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Folders
+vendor
+

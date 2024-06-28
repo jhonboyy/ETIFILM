@@ -1,7 +1,8 @@
 <template>
-  <section class="section-1" id="section-1">
+  <div>  
+    <section class="section-1" id="section-1">
     <nav class="menu">
-      <img src="@/assets/etifilm_logo.svg" alt="Etifilm logo">
+      <img src="/etifilm_logo.svg" alt="Etifilm logo">
       <a href="#section-3">Productos</a>
       <a href="#section-2">Nosotros</a>
       <a href="#footer">Contacto</a>
@@ -16,14 +17,14 @@
         </div>
       </div>
       <div class="first-container-svg">
-        <img alt="Ilustración de un palet con tres cajas apiladas siendo embaladas por dos bobinas de film y dos rollos de precinto." src="/images/Etifilm_1.svg">
+        <img alt="Ilustración de un palet con tres cajas apiladas siendo embaladas por dos bobinas de film y dos rollos de precinto." src="public/images/Etifilm_1.svg">
       </div>
     </div>
     <div class="container-arrow">
-      <object type="image/svg+xml" data="./images/arrow.svg"></object>
+      <object type="image/svg+xml" data="images/arrow.svg"></object>
     </div>
     <div class="container-arrow-up">
-      <object type="image/svg+xml" data="./images/arrow-up.svg"></object>
+      <object type="image/svg+xml" data="images/arrow-up.svg"></object>
     </div>
     <nav class="menu-mobile">
       <button type="button" aria-label="productos"><a href="#section-3">Productos</a></button>
@@ -34,6 +35,7 @@
   <section class="mobile-section">
     <p>Entendemos tu negocio y te ayudamos a crecer dándote un excelente servicio y calidad.</p>
   </section>
+  </div>
 </template>
 
 <script>
@@ -41,62 +43,71 @@
     name: 'HeaderSection',
     mounted() {
       const mediaQuery = window.matchMedia("(orientation:portrait) and (max-width: 950px)");
-  
+
       const handleMediaQueryChange = (event) => {
         if (event.matches) {
           const arrow = document.querySelector('.container-arrow');
           const menu = document.querySelector('.menu-mobile');
           const arrowUp = document.querySelector('.container-arrow-up');
           let previousScrollPosition = window.scrollY;
-  
+
           const toggleArrowAndMenu = () => {
             const currentScrollPosition = window.scrollY;
             const atBottom = currentScrollPosition >= document.documentElement.scrollHeight - window.innerHeight;
             const atTop = currentScrollPosition === 0;
-  
+
             if (currentScrollPosition > previousScrollPosition) {
               menu.classList.add('show-menu');
             } else {
               menu.classList.remove('show-menu');
             }
-  
+
             previousScrollPosition = currentScrollPosition;
-  
+
             if (atBottom) {
-              menu.style.display = 'none';
-              arrowUp.style.display = 'flex';
+              menu.classList.remove('show-menu');
+              arrowUp.classList.add('show-arrow');
             } else if (atTop) {
-              menu.style.display = 'none';
-              arrow.style.display = 'flex';
+              menu.classList.remove('show-menu');
+              arrow.classList.add('show-arrow');
             } else {
-              menu.style.display = 'grid';
-              arrow.style.display = 'none';
-              arrowUp.style.display = 'none';
+              menu.classList.add('show-menu');
+              arrow.classList.remove('show-arrow');
+              arrowUp.classList.remove('show-arrow');
             }
           };
-  
+
           window.addEventListener('scroll', toggleArrowAndMenu);
-  
           arrow.addEventListener('click', () => {
             menu.classList.toggle('show-menu');
           });
-  
+
           // Store the function reference for later removal
           this.toggleArrowAndMenu = toggleArrowAndMenu;
-  
+
         } else {
           if (this.toggleArrowAndMenu) {
             window.removeEventListener('scroll', this.toggleArrowAndMenu);
           }
+
+          // Ensure menu is hidden and arrow states are reset when exiting mobile view
+          const arrow = document.querySelector('.container-arrow');
+          const menu = document.querySelector('.menu-mobile');
+          const arrowUp = document.querySelector('.container-arrow-up');
+          if (arrow && menu && arrowUp) {
+            menu.classList.remove('show-menu');
+            arrow.classList.remove('show-arrow');
+            arrowUp.classList.remove('show-arrow');
+          }
         }
       };
-  
+
       mediaQuery.addEventListener('change', handleMediaQueryChange);
       handleMediaQueryChange(mediaQuery);
-  
+
       // Update the section height on mount and on resize
       const section1 = document.getElementById('section-1');
-  
+
       const updateSection1Height = () => {
         const viewportHeight = window.innerHeight;
         const footer = document.querySelector('footer');
@@ -105,12 +116,13 @@
           section1.style.height = (viewportHeight - navBarHeight) + 'px';
         }
       };
-  
+
       updateSection1Height();
       window.addEventListener('resize', updateSection1Height);
     }
   }
-  </script>
+</script>
+
 
 <style scoped>
 /* Añadir estilos relevantes aquí */

@@ -23,8 +23,9 @@
   </section>
 </template>
 
+
 <script>
-import { useKeenSlider } from 'keen-slider/vue.es'
+import { useKeenSlider } from 'keen-slider/vue'
 import 'keen-slider/keen-slider.min.css'
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
@@ -82,6 +83,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .hidden {

@@ -1,10 +1,10 @@
 <template>
 
-    <Header />
-    <AboutUs />
-    <Products />
-    <Contact />
-    <Footer />
+  <Header />
+  <AboutUs />
+  <Products />
+  <Contact />
+  <Footer />
 
 
 </template>
@@ -20,15 +20,15 @@ import Footer from './components/Footer.vue';
 
 
 export default {
-  name: 'App',
-  components: {
-    Header,
-    AboutUs,
-    Products,
-    Contact,
-    Footer,
+name: 'App',
+components: {
+  Header,
+  AboutUs,
+  Products,
+  Contact,
+  Footer,
 
 
-  }
+}
 }
 </script>

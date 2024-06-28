@@ -3,7 +3,7 @@
       <div class="scroll-cards">
         <div class="scroll-cards__item A">
           <div class="card-container">
-            <img alt="ilustración de un pequeño jardín. Al frente una flor, una abeja, césped y un lagarto. Detrás dos nubes." src="/images/Etifilm_2.svg">
+            <img alt="ilustración de un pequeño jardín. Al frente una flor, una abeja, césped y un lagarto. Detrás dos nubes." src="public/images/Etifilm_2.svg">
             <div class="inner-card">
               <p><span style="color: white">(1)</span></p>
               <h2>Respetamos el medio ambiente</h2>
@@ -18,12 +18,12 @@
               <h2 style="color: white !important;">Producto de calidad</h2>
               <p>Con nuestros productos les garantizamos una excelente calidad, por lo que aseguramos un buen uso y devolución del material.</p>
             </div>
-            <img alt="ilustración de un personaje descansando dentro de un rollo de precinto" src="/images/Etifilm_3.svg">
+            <img alt="ilustración de un personaje descansando dentro de un rollo de precinto" src="public/images/Etifilm_3.svg">
           </div>
         </div>
         <div class="scroll-cards__item C">
           <div class="card-container">
-            <img alt="ilustración de tres personajes resolviendo un puzle con la forma de las Islas Canarias. Uno de ellos está de pie y sostiene una pieza que representa Tenerife, el de la izquierda está sentado mientras sositene una pieza que representa La Palma y el de la derecha observa sentado el puzle." src="images/Etifilm_4.svg">
+            <img alt="ilustración de tres personajes resolviendo un puzle con la forma de las Islas Canarias. Uno de ellos está de pie y sostiene una pieza que representa Tenerife, el de la izquierda está sentado mientras sositene una pieza que representa La Palma y el de la derecha observa sentado el puzle." src="public/images/Etifilm_4.svg">
             <div class="inner-card">
               <p><span style="color: #009770">(3)</span></p>
               <h2>Servicio en toda Canarias</h2>
