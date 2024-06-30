@@ -1,4 +1,3 @@
-
 export default defineNuxtConfig({
   head: {
     title: 'ETIFILM',
@@ -8,7 +7,7 @@ export default defineNuxtConfig({
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'Descripción de tu sitio' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
@@ -19,14 +18,14 @@ export default defineNuxtConfig({
     '~/assets/styles/styles.css'
   ],
   plugins: [
-    '~/plugins/recaptcha.client.js'
+    '~/plugins/google-recaptcha.ts'
   ],
   components: true,
   buildModules: [
     '@nuxt/typescript-build'
   ],
   modules: [
-    'nuxt-mail'
+    'nuxt-mail',
   ],
   build: {},
   mail: {
@@ -41,21 +40,19 @@ export default defineNuxtConfig({
       }
     }
   },
-  publicRuntimeConfig: {
-    grecaptcha: {
-      hideBadge: true,
-      mode: "base",
-      siteKey: process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY,
-      version: 3
-    }
-  },
-  privateRuntimeConfig: {
-    recaptchaSecretKey: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
-    mail: {
-      smtp: {
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_APP_PASS
+  runtimeConfig: {
+    public: {
+      recaptchaSiteKey: process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY || '',
+      mailRecipient: process.env.MAIL_RECIPIENT || ''
+    },
+    private: {
+      recaptchaSecretKey: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
+      mail: {
+        smtp: {
+          auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASS
+          }
         }
       }
     }

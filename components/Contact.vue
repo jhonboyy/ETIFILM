@@ -3,6 +3,7 @@
     <div class="form-container">
       <h2>Solicita tu presupuesto</h2>
       <p>Explícanos qué necesitas y te contactaremos lo antes posible.</p>
+      
       <form v-if="showForm && !submitting" class="contact-form" @submit.prevent="handleSubmit">
         <div class="form-field" v-for="field in formFields" :key="field.id">
           <input :type="field.type" v-model="field.value" :placeholder="field.placeholder" :name="field.name" :class="field.inputClass" :pattern="field.pattern" :inputmode="field.inputMode" required>
@@ -11,14 +12,17 @@
           <input type="checkbox" id="consentimiento" v-model="consentimiento" required>
           <label for="consentimiento"><a href="./privacidad.html">He leído y acepto la política de privacidad</a></label>
         </div>
+        
         <div class="button-container">
           <button class="button-send" type="submit">Enviar</button>
         </div>
       </form>
+
       <div v-if="submitting" class="message success">Enviando el formulario...</div>
       <div v-if="successMessage" class="message success">{{ successMessage }}</div>
       <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
     </div>
+    
     <div class="contact-container-svg">
       <img alt="ilustración de un personaje atrapado siendo embalado en una caja de film" src="public/images/Etifilm_5.svg">
     </div>
@@ -26,10 +30,21 @@
 </template>
 
 <script>
-import { useNuxtApp } from '#app';
+import { useReCaptcha } from 'vue-recaptcha-v3'; // Importa el composable useReCaptcha
 
 export default {
   name: 'ContactSection',
+  setup() {
+    const { executeRecaptcha, recaptchaLoaded } = useReCaptcha(); // Utiliza el composable para acceder a las funciones de reCAPTCHA
+
+    const recaptcha = async () => {
+      await recaptchaLoaded();
+      const token = await executeRecaptcha('submit');
+      return token;
+    };
+
+    return { recaptcha }; // Retorna recaptcha para usarlo en métodos
+  },
   data() {
     return {
       consentimiento: false,
@@ -43,7 +58,8 @@ export default {
       submitting: false,
       errorMessage: '',
       successMessage: '',
-      showForm: true
+      showForm: true,
+      showRecaptcha: true // Asegúrate de controlar la visibilidad según necesites
     };
   },
   methods: {
@@ -55,33 +71,32 @@ export default {
       console.log('Form submitted, loading reCAPTCHA...');
 
       try {
-        const nuxtApp = useNuxtApp();
-        if (nuxtApp.$recaptcha && nuxtApp.$recaptcha.execute) {
-          const token = await nuxtApp.$recaptcha.execute('submit');
-          console.log('reCAPTCHA token obtained:', token);
+        const token = await this.recaptcha(); // Ejecuta reCAPTCHA y obtiene el token
+        console.log('reCAPTCHA token obtained:', token);
 
-          const formData = {
-            consentimiento: this.consentimiento ? '1' : '',
-            recaptcha: token,
-            ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
-          };
+        const formData = {
+          consentimiento: this.consentimiento ? '1' : '',
+          recaptcha: token,
+          ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
+        };
 
-          console.log('Sending form data:', formData);
+        console.log('Sending form data:', formData);
 
-          const response = await this.$axios.post('/api/send-mail', formData);
+        const response = await $fetch('/api/send-mail', {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: { 'Content-Type': 'application/json' }
+        });
 
-          if (response.data.success) {
-            console.log('Form submission successful:', response.data);
-            this.successMessage = response.data.message;
-            this.showForm = false;
-            setTimeout(this.resetForm, 3000);
-          } else {
-            console.error('Form submission error:', response.data.message);
-            this.errorMessage = response.data.message;
-            setTimeout(this.resetForm, 3000);
-          }
+        if (response.success) {
+          console.log('Form submission successful:', response);
+          this.successMessage = response.message;
+          this.showForm = false;
+          setTimeout(this.resetForm, 3000);
         } else {
-          console.error('reCAPTCHA execution failed: $recaptcha is not defined');
+          console.error('Form submission error:', response.message);
+          this.errorMessage = response.message;
+          setTimeout(this.resetForm, 3000);
         }
       } catch (error) {
         console.error('Error during form submission:', error);
@@ -101,5 +116,5 @@ export default {
       this.showForm = true;
     }
   }
-}
+};
 </script>
