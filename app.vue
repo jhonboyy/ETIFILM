@@ -8,7 +8,6 @@
 
 <script setup>
 
-// Importar los componentes
 import Header from './components/Header.vue';
 import AboutUs from './components/AboutUs.vue';
 import Products from './components/Products.vue';
