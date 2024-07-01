@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  // Verificar el token de reCAPTCHA
+  // reCAPTCHA token
   const config = useRuntimeConfig();
   const recaptchaSecret = config.private.recaptchaSecretKey;
   const recaptchaVerificationUrl = `https://www.google.com/recaptcha/api/siteverify`;
@@ -46,51 +46,51 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  const mailOptions = {
-    from: `"${name}" <${email}>`,
-    to: config.public.mailRecipient,
-    subject: `FORMULARIO WEB | ${company}`,
-    html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
-    replyTo: email
-  };
-
-  if (process.env.NODE_ENV === 'development') {
-    // Usar nodemailer con MailHog en desarrollo
-    const transporter = nodemailer.createTransport({
-      host: process.env.MAILHOG_HOST,
-      port: process.env.MAILHOG_PORT,
-    });
-
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log('Email sent successfully');
-      return {
-        success: true,
-        message: '¡El formulario ha sido enviado correctamente! 🥳🎉'
+  let mailOptions;
+  let transporter;
+  const mailMode = process.env.MAIL_MODE || 'mailhog'; // Default to Mailhog if not specified
+  
+  if (mailMode === 'mailhog') {
+      transporter = nodemailer.createTransport({
+          host: config.private.mailhogHost || 'localhost',
+          port: config.private.mailhogPort || 1025,
+      });
+      mailOptions = {
+        from: `"${name}" <${email}>`, // Use provided email for Mailhog
+        to: "recipient@example.com", // Example recipient for Mailhog
+        subject: `FORMULARIO WEB | ${company}`,
+        html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
+        replyTo: email
       };
-    } catch (error) {
-      console.error('Error sending email:', error);
-      return {
-        success: false,
-        message: `Error al enviar el correo: ${error.message}`
+  } else if (mailMode === 'gmail') {
+      transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: config.private.gmailUser,
+              pass: config.private.gmailPass,
+          },
+      });
+      mailOptions = {
+        from: `"${name}" <${config.private.gmailUser}>`, // Use authenticated Gmail address
+        to: config.private.gmailUser,
+        subject: `FORMULARIO WEB | ${company}`,
+        html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
+        replyTo: email
       };
-    }
-  } else {
-    // Usar nuxt-mail en producción
-    try {
-      const { mail } = useNitroApp().$mail;
-      await mail.send(mailOptions);
-      console.log('Email sent successfully');
-      return {
-        success: true,
-        message: '¡El formulario ha sido enviado correctamente! 🥳🎉'
-      };
-    } catch (error) {
-      console.error('Error sending email:', error);
-      return {
-        success: false,
-        message: `Error al enviar el correo: ${error.message}`
-      };
-    }
+  }
+  
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+    return {
+      success: true,
+      message: '¡El formulario ha sido enviado correctamente! 🥳🎉'
+    };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return {
+      success: false,
+      message: `Error al enviar el correo: ${error.message}`
+    };
   }
 });

@@ -25,7 +25,7 @@ export default defineNuxtConfig({
     '@nuxt/typescript-build'
   ],
   modules: [
-    'nuxt-mail',
+    'nuxt-mail'
   ],
   build: {},
   mail: {
@@ -33,7 +33,9 @@ export default defineNuxtConfig({
       to: process.env.MAIL_RECIPIENT
     },
     smtp: {
-      service: 'gmail',
+      host: process.env.NODE_ENV === 'development' ? process.env.MAILHOG_HOST : undefined,
+      port: process.env.NODE_ENV === 'development' ? process.env.MAILHOG_PORT : undefined,
+      service: process.env.NODE_ENV === 'production' ? 'gmail' : undefined,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASS
@@ -47,14 +49,10 @@ export default defineNuxtConfig({
     },
     private: {
       recaptchaSecretKey: process.env.VUE_APP_RECAPTCHA_SECRET_KEY,
-      mail: {
-        smtp: {
-          auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASS
-          }
-        }
-      }
+      gmailUser: process.env.GMAIL_USER,
+      gmailPass: process.env.GMAIL_APP_PASS,
+      mailhogHost: process.env.MAILHOG_HOST,
+      mailhogPort: process.env.MAILHOG_PORT
     }
   }
 });
