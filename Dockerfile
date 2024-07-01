@@ -1,18 +1,23 @@
-FROM php:7.4-apache
-
-# Establecer el nombre del servidor para evitar advertencias de Apache
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && a2enmod rewrite \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Copiar el contenido del directorio del proyecto al contenedor
-COPY . /var/www/html
+# Usa la imagen oficial de Node.js como imagen base
+FROM node:14
 
 # Establecer el directorio de trabajo
-WORKDIR /var/www/html
+WORKDIR /app
 
-# Instalar dependencias de Composer
-RUN composer install
+# Copiar package.json y package-lock.json
+COPY package*.json ./
 
-# Exponer el puerto 80
-EXPOSE 80
+# Instalar dependencias
+RUN npm install
+
+# Copiar el resto del proyecto al contenedor
+COPY . .
+
+# Construir la aplicación para producción
+RUN npm run build
+
+# Exponer el puerto en el que se ejecutará la aplicación
+EXPOSE 3000
+
+# Comando para ejecutar la aplicación
+CMD ["npm", "start"]
