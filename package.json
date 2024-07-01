@@ -25,6 +25,7 @@
     "vue-recaptcha-v3": "^2.0.1"
   },
   "devDependencies": {
-    "@nuxtjs/auth": "^4.9.1"
+    "@nuxtjs/auth": "^4.9.1",
+    "@types/nodemailer": "^6.4.15"
   }
 }
