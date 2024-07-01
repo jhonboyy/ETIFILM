@@ -25,23 +25,9 @@ export default defineNuxtConfig({
     '@nuxt/typescript-build'
   ],
   modules: [
-    'nuxt-mail'
+
   ],
   build: {},
-  mail: {
-    message: {
-      to: process.env.MAIL_RECIPIENT
-    },
-    smtp: {
-      host: process.env.NODE_ENV === 'development' ? process.env.MAILHOG_HOST : undefined,
-      port: process.env.NODE_ENV === 'development' ? process.env.MAILHOG_PORT : undefined,
-      service: process.env.NODE_ENV === 'production' ? 'gmail' : undefined,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASS
-      }
-    }
-  },
   runtimeConfig: {
     public: {
       recaptchaSiteKey: process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY || '',
