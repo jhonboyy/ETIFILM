@@ -33,7 +33,7 @@ export default {
   name: 'ProductsSection',
   setup() {
     const products = ref([
-      { title: 'Film', description: 'Film manual y de máquina estirables. Tenemos diferentes preestiros y de material reciclado.', alt: 'ilustración de una caja siendo embalada con film transparente', image: '/images/film.svg' },
+      { title: 'Film', description: 'Film manual y de máquina estirables. Tenemos diferentes preestiros y de material reciclado.', alt: 'ilustración de una caja siendo embalada con film transparente', image: '/images/Film.svg' },
       { title: 'Precinto', description: 'Acrílicos, base solvente y PVC de diferentes calidades, medidas y colores.', alt: 'ilustración de una caja y tres rollos de precinto al lado izquierdo', image: '/images/Precinto.svg' },
       { title: 'Big Bag', description: 'Reutilizables de diferentes medidas, materiales, pesos y especificaciones.', alt: 'ilustración de un big bag lleno', image: '/images/Bags.svg' },
       { title: 'Fleje', description: 'Polipropileno y reciclado para máquina y manual, en diferentes medidas.', alt: 'ilustración de una bobina de fleje', image: '/images/Fleje.svg' },
