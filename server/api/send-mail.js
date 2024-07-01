@@ -7,8 +7,6 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { name, email, company, phone, message, recaptcha } = body;
 
-  console.log('Received form data:', body);
-
   if (!name || !email) {
     return {
       success: false,
@@ -29,8 +27,6 @@ export default defineEventHandler(async (event) => {
         response: recaptcha
       }
     });
-
-    console.log('reCAPTCHA verification response:', recaptchaResponse);
 
     if (!recaptchaResponse.success) {
       return {
@@ -72,7 +68,7 @@ export default defineEventHandler(async (event) => {
       });
       mailOptions = {
         from: `"${name}" <${config.private.gmailUser}>`, // Use authenticated Gmail address
-        to: config.private.gmailUser,
+        to: config.private.gmailUser, // Ensure this is a valid address for production
         subject: `FORMULARIO WEB | ${company}`,
         html: `Nombre: ${name}<br>Email: ${email}<br>Empresa: ${company}<br>Teléfono: ${phone}<br>Mensaje: ${message}`,
         replyTo: email
@@ -81,7 +77,6 @@ export default defineEventHandler(async (event) => {
   
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully');
     return {
       success: true,
       message: '¡El formulario ha sido enviado correctamente! 🥳🎉'
