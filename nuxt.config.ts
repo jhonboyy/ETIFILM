@@ -14,6 +14,11 @@ export default defineNuxtConfig({
   linkChecker: {
     enabled: true
   },
+  router: {
+    options: {
+      scrollBehaviorType: 'smooth',
+    }
+  },
   app: {
     head: {
       title: 'ETIFILM - Embalajes Industriales en Tenerife, Islas Canarias',
@@ -49,7 +54,7 @@ export default defineNuxtConfig({
     '~/assets/styles/styles.css'
   ],
   plugins: [
-    '~/plugins/google-recaptcha'
+    '~/plugins/google-recaptcha',
   ],
   components: true,
   modules: [
@@ -62,8 +67,7 @@ export default defineNuxtConfig({
     gzip: true,
     routes: [
       '/',
-      '/about',
-      '/contact',
+      '/privacidad',
     ]
   },
   runtimeConfig: {
