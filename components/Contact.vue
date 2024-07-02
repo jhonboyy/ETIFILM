@@ -1,5 +1,5 @@
 <template>
-  <section class="section-4" id="section-4">
+  <section class="section-4" id="contacto">
     <div class="form-container">
       <h2>Solicita tu presupuesto</h2>
       <p>Explícanos qué necesitas y te contactaremos lo antes posible.</p>
@@ -10,7 +10,7 @@
         </div>
         <div class="form-field">
           <input type="checkbox" id="consentimiento" v-model="consentimiento" required>
-          <label for="consentimiento"><a href="./privacidad.html">He leído y acepto la política de privacidad</a></label>
+          <label for="consentimiento"><a href="./privacidad">He leído y acepto la política de privacidad</a></label>
         </div>
         
         <div class="button-container">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import gsap from 'gsap';
 import { useReCaptcha } from 'vue-recaptcha-v3'; // Importa el composable useReCaptcha
 
 export default {
@@ -114,7 +115,32 @@ export default {
       this.errorMessage = '';
       this.successMessage = '';
       this.showForm = true;
-    }
+    },
+    animateSVG() {
+    this.$nextTick(() => {
+      const svgElement = document.querySelector('.contact-container-svg img');
+      if (svgElement) {
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 }); // Repite indefinidamente con una pausa entre cada repetición
+        
+        tl.to(svgElement, {
+          x: -10,
+          rotation: -5,
+          duration: 0.1,
+          yoyo: true,
+          repeat: 2, // Número de veces que tiembla en cada ciclo
+          ease: "power1.inOut"
+        }).to(svgElement, {
+          x: 0, // Vuelve a la posición inicial
+          rotation: 0,
+          duration: 0.1,
+          ease: "power1.inOut"
+        });
+      }
+    });
+  }
+  },
+  mounted() {
+    this.animateSVG();
   }
 };
 </script>

@@ -12,7 +12,7 @@
          </div>
          <div class="footer-right">         
             <p>© Etifilm 2023</p>
-            <a href="./privacidad.html" target="_blank" style="text-decoration: underline !important;">Politica de privacidad y cookies</a>
+            <a href="./privacidad" target="_blank" style="text-decoration: underline !important;">Politica de privacidad y cookies</a>
             <p>Web protegida por reCAPTCHA (<a href="https://policies.google.com/privacy">privacidad</a> | <a href="https://policies.google.com/terms">uso</a>)</p>
          </div>
       </footer>

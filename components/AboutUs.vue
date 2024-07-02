@@ -1,5 +1,5 @@
 <template>
-    <section class="section-2" id="section-2">
+    <section class="section-2" id="nosotros">
       <div class="scroll-cards">
         <div class="scroll-cards__item A">
           <div class="card-container">
