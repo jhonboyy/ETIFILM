@@ -10,6 +10,13 @@
 	--font-size-a: 1.2em;
 	--font-family: 'AcidGrotesk';
 }
+input{
+	pointer-events: auto;
+	cursor: pointer;
+}
+html {
+	scroll-behavior: smooth;
+}
 html, body {
 	margin: 0;
 	padding: 0;
@@ -138,6 +145,8 @@ button, input {
 	align-items: center;
 	justify-content: center;
 	display: flex;
+	pointer-events: auto;
+	cursor: pointer;
 }
 .container-arrow {
 	display: flex;
@@ -347,13 +356,14 @@ button, input {
 	border-radius: 70px;
 	height: 3.5vw;
 	width: 9vw;
-	
 	align-items: center;
 	justify-content: center;
 	display: grid;
 	color: #E6835D;
 	border: 2px solid #000;
 	background-color: #000;
+	pointer-events: auto;
+	cursor: pointer;
 }
 .contact-form .form-field {
 	padding-right: 13%;
@@ -447,6 +457,67 @@ footer p, footer a {
 	text-align: right;
 	padding-right: 10%;
 }
+/* ///////////////////////////////////////////////////// PRIVACY ///////////////////////////////////////////////////// */
+.PrivacySection {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: start;
+	background-color: #ecece5;
+	min-height: 100vh;
+	padding-top: 5%;
+  }
+  .accordion {
+	cursor: pointer;
+	padding: 6vh 0;
+	width: 90vw;
+	border: none;
+	text-align: left;
+	background-color: transparent;
+  }
+  .panel {
+	margin-top: 5px;
+	width: 90vw;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.4s ease-in-out;
+  }
+  .panel-active {
+	max-height: 1000px;
+	padding-bottom: 5%;
+  }
+  .PrivacySection h1 {
+	color: #009770;
+	text-align: left;
+	width: 90vw;
+  }
+  .PrivacySection button {
+	font-size: 3em;
+	font-weight: 100;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+  }
+  button > .arrow {
+	transition: transform 0.4s;
+	width: 1em;
+	height: 1em;
+  }
+  button > .arrow-down {
+	transform: rotate(180deg);
+	height: 0.7em;
+  }
+  button > .arrow-right {
+	transform: rotate(0deg);
+	height: 0.7em;
+  }
+  .panel p, .panel li, .panel a {
+	font-weight: 100;
+	font-size: 1.2em;
+  }
+  .panel a{
+	font-size: 1em;
+  }
 /* ///////////////////////////////////////////////////// MOBILE ///////////////////////////////////////////////////// */
 @media (max-width: 950px) {
    /* ///////////////////////////GENERAL STYLE MOBILE/////////////////////////// */
@@ -551,7 +622,7 @@ footer p, footer a {
 		justify-items: center;
 		z-index: 1;
    }
-	.menu-mobile button {
+	.menu-mobile a {
 		display: flex;
 		backdrop-filter: blur(10px);
 		-webkit-backdrop-filter: blur(10px);
@@ -562,8 +633,6 @@ footer p, footer a {
 		border-radius: 70px;
 		align-items: center;
 		justify-content: center;
-   }
-	.menu-mobile a {
 		text-decoration: none;
    }
 	.show-menu {
