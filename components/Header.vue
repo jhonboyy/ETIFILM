@@ -130,10 +130,11 @@ export default {
       this.$nextTick(() => {
         const svgElement = document.querySelector('.first-container-svg img');
         if (svgElement) {
-          gsap.from(svgElement, {
+          gsap.set(svgElement, { visibility: 'visible', y: -150 });
+          gsap.to(svgElement, {
             duration: 2,
-            opacity: 0,
-            y: -150,
+            opacity: 1,
+            y: 0,
             delay: 0.5,
             ease: 'bounce.out'
           });
@@ -143,6 +144,8 @@ export default {
   }
 }
 </script>
+
+
 
 <style scoped>
 /* Añadir estilos relevantes aquí */
