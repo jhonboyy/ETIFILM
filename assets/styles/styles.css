@@ -110,8 +110,10 @@ button, input {
 .first-container-svg img {
 	width: 100%;
 	height: 100%;
-	opacity: 0; /* Oculta la imagen inicialmente */
-	visibility: hidden; /* Asegura que no se muestre hasta que se anime */
+	opacity: 0;
+   /* Oculta la imagen inicialmente */
+	visibility: hidden;
+   /* Asegura que no se muestre hasta que se anime */
 }
 .first-container-svg {
 	width: 100%;
@@ -200,7 +202,7 @@ button, input {
 	transform: translate(calc((var(--nth) - 1) * var(--offset)), calc((var(--nth) - 1) * var(--offset)));
 }
 .card-container {
-	display: grid;	
+	display: grid;
 	justify-items: center;
 	align-items: center;
 	padding: 0 6% 0 6%;
@@ -343,7 +345,6 @@ button, input {
 	color: white;
 }
 .section-4 img {
-	
 	width: 100%;
 	height: auto;
 }
@@ -468,58 +469,58 @@ footer p, footer a {
 	background-color: #ecece5;
 	min-height: 100vh;
 	padding-top: 5%;
-  }
-  .accordion {
+}
+.accordion {
 	cursor: pointer;
 	padding: 6vh 0;
 	width: 90vw;
 	border: none;
 	text-align: left;
 	background-color: transparent;
-  }
-  .panel {
+}
+.panel {
 	margin-top: 5px;
 	width: 90vw;
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.4s ease-in-out;
-  }
-  .panel-active {
+}
+.panel-active {
 	max-height: 1000px;
 	padding-bottom: 5%;
-  }
-  .PrivacySection h1 {
+}
+.PrivacySection h1 {
 	color: #009770;
 	text-align: left;
 	width: 90vw;
-  }
-  .PrivacySection button {
+}
+.PrivacySection button {
 	font-size: 3em;
 	font-weight: 100;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-  }
-  button > .arrow {
+}
+button > .arrow {
 	transition: transform 0.4s;
 	width: 1em;
 	height: 1em;
-  }
-  button > .arrow-down {
+}
+button > .arrow-down {
 	transform: rotate(180deg);
 	height: 0.7em;
-  }
-  button > .arrow-right {
+}
+button > .arrow-right {
 	transform: rotate(0deg);
 	height: 0.7em;
-  }
-  .panel p, .panel li, .panel a {
+}
+.panel p, .panel li, .panel a {
 	font-weight: 100;
 	font-size: 1.2em;
-  }
-  .panel a{
+}
+.panel a{
 	font-size: 1em;
-  }
+}
 /* ///////////////////////////////////////////////////// MOBILE ///////////////////////////////////////////////////// */
 @media (max-width: 950px) {
    /* ///////////////////////////GENERAL STYLE MOBILE/////////////////////////// */
@@ -552,6 +553,9 @@ footer p, footer a {
 		grid-template-rows: 10% 80% 10%;
 		padding: 5% 0 0 0;
 		border-radius: 0 0 40px 40px;
+   }
+	.section-1-wrapper {
+		height: 100vh;
    }
 	.container-button {
 		display: none;
@@ -641,8 +645,8 @@ footer p, footer a {
 	.show-menu {
 		display: grid;
    }
-   .show-arrow {
-	    display: flex;
+	.show-arrow {
+		display: flex;
    }
    /* ///////////////////////////MOBILE SECTION/////////////////////////// */
 	.mobile-section {
@@ -686,8 +690,8 @@ footer p, footer a {
 		grid-template-columns: 1fr;
 		gap: 0;
    }
-   .A .card-container{
-	    grid-template-rows: 35% max-content;
+	.A .card-container{
+		grid-template-rows: 35% max-content;
    }
 	.B .card-container img {
 		grid-area: 1 / auto / 2 / auto;
@@ -769,8 +773,8 @@ footer p, footer a {
 		align-items: center;
 		justify-content: center;
    }
-   .form-field:nth-child(6) {
-	   padding: 10% 0 10% 4%;
+	.form-field:nth-child(6) {
+		padding: 10% 0 10% 4%;
    }
 	.contact-form .input-text {
 		height: 15vw;

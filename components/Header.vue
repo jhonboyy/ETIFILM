@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="section-1-wrapper">
     <section class="section-1" id="inicio">
       <nav class="menu">
         <img src="/etifilm_logo.svg" alt="Etifilm logo">
-        <NuxtLink :to="{ path: '/', hash: '#productos' }">Productos</NuxtLink>
         <NuxtLink :to="{ path: '/', hash: '#nosotros' }">Nosotros</NuxtLink>
-        <NuxtLink :to="{ path: '/', hash: '#footer' }">Contacto</NuxtLink>
+        <NuxtLink :to="{ path: '/', hash: '#productos' }">Productos</NuxtLink>
+        <NuxtLink :to="{ path: '/', hash: '#contacto' }">Contacto</NuxtLink>
       </nav>
       <div class="first">
         <div class="container-text">
@@ -27,15 +27,15 @@
         <object type="image/svg+xml" data="images/arrow-up.svg"></object>
       </div>
       <nav class="menu-mobile">
-        <NuxtLink :to="{ path: '/', hash: '#productos' }">Productos</NuxtLink>
         <NuxtLink :to="{ path: '/', hash: '#nosotros' }">Nosotros</NuxtLink>
-        <NuxtLink :to="{ path: '/', hash: '#footer' }">Contacto</NuxtLink>
+        <NuxtLink :to="{ path: '/', hash: '#productos' }">Productos</NuxtLink>
+        <NuxtLink :to="{ path: '/', hash: '#contacto' }">Contacto</NuxtLink>
       </nav>
     </section>
-    <section class="mobile-section">
+  </div>
+  <section class="mobile-section">
       <p>Entendemos tu negocio y te ayudamos a crecer dándote un excelente servicio y calidad.</p>
     </section>
-  </div>
 </template>
 
 <script>
