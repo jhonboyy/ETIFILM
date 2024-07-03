@@ -583,6 +583,7 @@ footer p, footer a {
    }
 	.container-arrow {
 		position: fixed;
+		display: none;
 		bottom: 0;
 		width: 100%;
 		height: auto;
@@ -639,6 +640,9 @@ footer p, footer a {
    }
 	.show-menu {
 		display: grid;
+   }
+   .show-arrow {
+	    display: flex;
    }
    /* ///////////////////////////MOBILE SECTION/////////////////////////// */
 	.mobile-section {
@@ -789,9 +793,12 @@ footer p, footer a {
 		height: max-content;
 		object-fit: contain;
 		padding: 15% 0 15% 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
    }
 	.contact-container-svg img {
-		width: 100%;
+		width: 90%;
 		height: auto;
    }
    /* ///////////////////////////FOOTER MOBILE/////////////////////////// */
