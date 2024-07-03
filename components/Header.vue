@@ -21,10 +21,10 @@
         </div>
       </div>
       <div class="container-arrow">
-        <object type="image/svg+xml" data="images/arrow.svg"></object>
+        <object type="image/svg+xml" data="images/arrow.svg" aria-label="Alternative Text">Flecha hacia abajo></object>
       </div>
       <div class="container-arrow-up">
-        <object type="image/svg+xml" data="images/arrow-up.svg"></object>
+        <object type="image/svg+xml" data="images/arrow-up.svg" aria-label="Alternative Text">Flecha hacia arriba></object>
       </div>
       <nav class="menu-mobile">
         <NuxtLink :to="{ path: '/', hash: '#nosotros' }">Nosotros</NuxtLink>

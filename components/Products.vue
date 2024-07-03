@@ -4,10 +4,10 @@
       <h2>Productos</h2>
       <div class="container-nav">
         <button type="button" aria-label="flecha a la izquierda" id="button--left" @click="moveLeft">
-          <object id="arrow--left" type="image/svg+xml" data="/images/arrow_left.svg"></object>
+          <object id="arrow--left" type="image/svg+xml" data="/images/arrow_left.svg" aria-label="Alternative Text">Flecha a la izquierda></object>
         </button>
         <button type="button" aria-label="flecha a la derecha" id="button--right" @click="moveRight">
-          <object id="arrow--right" type="image/svg+xml" data="/images/arrow_right.svg"></object>
+          <object id="arrow--right" type="image/svg+xml" data="/images/arrow_right.svg" aria-label="Alternative Text">Flecha a la derecha></object>
         </button>
       </div>
       <div class="keen-slider" ref="sliderContainer">
