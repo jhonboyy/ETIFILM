@@ -16,6 +16,15 @@
         <div class="button-container">
           <button class="button-send" type="submit">Enviar</button>
         </div>
+
+        <!-- Campo oculto (honeypot) -->
+        <div style="display:none;">
+          <label for="bot-field">Leave this field empty</label>
+          <input type="text" id="bot-field" v-model="botField">
+        </div>
+
+        <!-- Campo oculto para medir el tiempo -->
+        <input type="hidden" id="start-time" :value="startTime">
       </form>
 
       <div v-if="submitting" class="message success">Enviando el formulario...</div>
@@ -31,21 +40,9 @@
 
 <script>
 import gsap from 'gsap';
-import { useReCaptcha } from 'vue-recaptcha-v3'; // Importa el composable useReCaptcha
 
 export default {
   name: 'ContactSection',
-  setup() {
-    const { executeRecaptcha, recaptchaLoaded } = useReCaptcha(); // Utiliza el composable para acceder a las funciones de reCAPTCHA
-
-    const recaptcha = async () => {
-      await recaptchaLoaded();
-      const token = await executeRecaptcha('submit');
-      return token;
-    };
-
-    return { recaptcha }; // Retorna recaptcha para usarlo en métodos
-  },
   data() {
     return {
       consentimiento: false,
@@ -56,6 +53,8 @@ export default {
         { id: 'phone', type: 'tel', value: '', placeholder: 'Teléfono', name: 'phone', inputClass: 'input-text', label: 'Teléfono', pattern: '\\d*', inputMode: 'numeric' },
         { id: 'message', type: 'textarea', value: '', placeholder: 'Mensaje', name: 'message', inputClass: 'input-text', label: 'Mensaje' }
       ],
+      botField: '', // Campo honeypot
+      startTime: '', // Tiempo de inicio
       submitting: false,
       errorMessage: '',
       successMessage: '',
@@ -64,57 +63,64 @@ export default {
     };
   },
   methods: {
-    async handleSubmit() {
+    handleSubmit() {
       this.submitting = true;
       this.errorMessage = '';
       this.successMessage = '';
 
-      console.log('Form submitted, loading reCAPTCHA...');
+      // Verifica el campo honeypot y el tiempo de sumisión
+      console.log('Start time:', this.startTime);
 
-      try {
-        const token = await this.recaptcha(); // Ejecuta reCAPTCHA y obtiene el token
-        console.log('reCAPTCHA token obtained:', token);
+      const duration = new Date().getTime() - Number(this.startTime);
+      if (this.botField || duration < 3000) { // Ajusta el tiempo mínimo según sea necesario
+        this.errorMessage = 'Bot detected!';
+        this.submitting = false;
+        return;
+      }
 
-        const formData = {
-          consentimiento: this.consentimiento ? '1' : '',
-          recaptcha: token,
-          ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {})
-        };
+      const formData = {
+        consentimiento: this.consentimiento ? '1' : '',
+        ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {}),
+        botField: this.botField,
+        startTime: this.startTime
+      };
 
-        console.log('Sending form data:', formData);
+      console.log('Sending form data:', formData);
 
-        const response = await $fetch('/api/send-mail', {
-          method: 'POST',
-          body: JSON.stringify(formData),
-          headers: { 'Content-Type': 'application/json' }
-        });
-
+      $fetch('/api/send-mail', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => {
         if (response.success) {
-          console.log('Form submission successful:', response);
           this.successMessage = response.message;
           this.showForm = false;
           setTimeout(this.resetForm, 3000);
         } else {
-          console.error('Form submission error:', response.message);
           this.errorMessage = response.message;
           setTimeout(this.resetForm, 3000);
         }
-      } catch (error) {
-        console.error('Error during form submission:', error);
+      })
+      .catch(error => {
         this.errorMessage = `Error al enviar el formulario: ${error.message}`;
         setTimeout(this.resetForm, 3000);
-      }
-
-      this.submitting = false;
+      })
+      .finally(() => {
+        this.submitting = false;
+      });
     },
+
     resetForm() {
       this.formFields.forEach(field => {
         field.value = '';
       });
       this.consentimiento = false;
+      this.botField = ''; // Resetea el campo honeypot
       this.errorMessage = '';
       this.successMessage = '';
       this.showForm = true;
+      this.startTime = ''; // Resetea el tiempo de inicio
     },
     animateSVG() {
     this.$nextTick(() => {
@@ -139,8 +145,10 @@ export default {
     });
   }
   },
+
   mounted() {
     this.animateSVG();
+    this.startTime = new Date().getTime(); // Inicializa el tiempo de inicio al montar el componente
   }
 };
 </script>

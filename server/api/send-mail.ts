@@ -1,6 +1,5 @@
 import { readBody, defineEventHandler } from 'h3';
 import nodemailer from 'nodemailer';
-import { $fetch } from 'ohmyfetch';
 import { useRuntimeConfig } from '#imports';
 
 interface RequestBody {
@@ -9,50 +8,41 @@ interface RequestBody {
   company?: string;
   phone?: string;
   message?: string;
-  recaptcha: string;
-}
-
-interface RecaptchaResponse {
-  success: boolean;
-  [key: string]: any;
+  botField?: string; // Campo honeypot
+  startTime?: string; // Tiempo de inicio
 }
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<RequestBody>(event);
-  const { name, email, company, phone, message, recaptcha } = body;
+  const { name, email, company, phone, message, botField, startTime } = body;
+
+  console.log('Request body:', body);
 
   if (!name || !email) {
+    console.log('Missing required fields.');
     return {
       success: false,
       message: 'Nombre y correo son requeridos'
     };
   }
 
-  // reCAPTCHA token
-  const config = useRuntimeConfig();
-  const recaptchaSecret = config.private.recaptchaSecretKey;
-  const recaptchaVerificationUrl = `https://www.google.com/recaptcha/api/siteverify`;
-
-  try {
-    const recaptchaResponse = await $fetch<RecaptchaResponse>(recaptchaVerificationUrl, {
-      method: 'POST',
-      params: {
-        secret: recaptchaSecret,
-        response: recaptcha
-      }
-    });
-
-    if (!recaptchaResponse.success) {
-      return {
-        success: false,
-        message: 'Error de verificación de reCAPTCHA'
-      };
-    }
-  } catch (error) {
-    console.error('Error during reCAPTCHA verification:', error);
+  // Verificación del campo honeypot
+  if (botField) {
+    console.log('Bot detected via honeypot.');
     return {
       success: false,
-      message: 'Error verificando reCAPTCHA: ' + (error as Error).message
+      message: 'Bot detected!'
+    };
+  }
+
+  // Verificación del tiempo de sumisión del formulario
+  const duration = new Date().getTime() - Number(startTime);
+  console.log('Submission duration:', duration);
+  if (duration < 3000) { // Ajusta el tiempo mínimo según sea necesario
+    console.log('Bot detected due to quick submission.');
+    return {
+      success: false,
+      message: 'Bot detected! Submission too quick.'
     };
   }
 
@@ -65,6 +55,7 @@ export default defineEventHandler(async (event) => {
   };
   let transporter: nodemailer.Transporter = nodemailer.createTransport({});
 
+  const config = useRuntimeConfig();
   const mailMode = process.env.MAIL_MODE || 'mailhog'; // Default to Mailhog if not specified
 
   if (mailMode === 'mailhog') {
@@ -97,7 +88,9 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    console.log('Sending email with options:', mailOptions);
     await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully.');
     return {
       success: true,
       message: '¡El formulario ha sido enviado correctamente! 🥳🎉'
