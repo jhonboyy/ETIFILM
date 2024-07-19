@@ -1,24 +1,34 @@
 export default defineNuxtConfig({
+  site: {
+    url: 'https://etifilm.com',
+  },
+
   ogImage: {
     enabled: false
   },
+
   robots: {
     enabled: true
   },
+
   seoExperiments: {
     enabled: true
   },
+
   schemaOrg: {
     enabled: true
   },
+
   linkChecker: {
     enabled: true
   },
+
   router: {
     options: {
       scrollBehaviorType: 'smooth',
     }
   },
+
   app: {
     head: {
       title: 'ETIFILM - Embalajes Industriales en Tenerife, Islas Canarias',
@@ -50,18 +60,18 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   css: [
     '~/assets/styles/styles.css'
   ],
+
   plugins: [
-    '~/plugins/google-recaptcha',
+
   ],
+
   components: true,
-  modules: [
-    "@nuxtjs/seo",
-    "nuxt-schema-org",
-    '@nuxtjs/sitemap'
-  ],
+  modules: ["@nuxtjs/seo", "nuxt-schema-org", '@nuxtjs/sitemap', "@nuxtjs/robots"],
+
   sitemap: {
     hostname: 'https://etifilm.com',
     gzip: true,
@@ -70,6 +80,7 @@ export default defineNuxtConfig({
       '/privacidad',
     ]
   },
+
   runtimeConfig: {
     public: {
       recaptchaSiteKey: process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY || '',
@@ -82,5 +93,7 @@ export default defineNuxtConfig({
       mailhogHost: process.env.MAILHOG_HOST,
       mailhogPort: process.env.MAILHOG_PORT
     }
-  }
+  },
+
+  compatibilityDate: '2024-07-19'
 });
