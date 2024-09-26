@@ -66,8 +66,8 @@ button, input {
 }
 /* ///////////////////////////////////////////////////// SECTION 1 ///////////////////////////////////////////////////// */
 .section-1 {
-	height: 100vh !important;
-	min-height: 800px;
+	height: 100vh;
+	min-height: 100vh;
 	grid-template-rows: 10% 80% 10%;
 	background-color: #ecece5;
 	border-radius: 0 0 61px 61px;
