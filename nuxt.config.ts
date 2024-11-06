@@ -45,18 +45,19 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'ETIFILM - Embalajes Industriales en Tenerife, Islas Canarias' },
         { property: 'og:description', content: 'ETIFILM - Expertos en embalajes industriales en Tenerife, Islas Canarias. Proporcionamos soluciones de embalaje seguras y eficientes para todas sus necesidades industriales.' },
         { property: 'og:url', content: 'https://etifilm.com' },
-        { property: 'og:image', content: '/images/etifilm-favicon.svg' }, // Reemplaza con la ruta real de la imagen
+        { property: 'og:image', content: '/images/etifilm-favicon.svg' },
         { property: 'og:type', content: 'website' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:site', content: '@etifilm' }, // Reemplaza con el usuario de Twitter de la empresa si aplica
+        { name: 'twitter:site', content: '@etifilm' },
         { name: 'twitter:title', content: 'ETIFILM - Embalajes Industriales en Tenerife, Islas Canarias' },
         { name: 'twitter:description', content: 'ETIFILM - Expertos en embalajes industriales en Tenerife, Islas Canarias. Proporcionamos soluciones de embalaje seguras y eficientes para todas sus necesidades industriales.' },
-        { name: 'twitter:image', content: '/path/to/your/image.jpg' } // Reemplaza con la ruta real de la imagen
+        { name: 'twitter:image', content: '/path/to/your/image.jpg' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/images/etifilm-favicon.svg' },
         { rel: 'canonical', href: 'https://etifilm.com' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap' }
+        { rel: 'preload', href: '/fonts/FFF-AcidGrotesk-Light-TRIAL', as:'font', type: 'font/woff2', crossorigin: 'anonymous'}
+
       ]
     }
   },
