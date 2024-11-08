@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import gsap from 'gsap';
-
 export default {
   name: 'ContactSection',
   data() {
@@ -122,32 +120,9 @@ export default {
       this.showForm = true;
       this.startTime = ''; // Resetea el tiempo de inicio
     },
-    animateSVG() {
-    this.$nextTick(() => {
-      const svgElement = document.querySelector('.contact-container-svg img');
-      if (svgElement) {
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 }); // Repite indefinidamente con una pausa entre cada repetición
-        
-        tl.to(svgElement, {
-          x: -10,
-          rotation: -5,
-          duration: 0.1,
-          yoyo: true,
-          repeat: 2, // Número de veces que tiembla en cada ciclo
-          ease: "power1.inOut"
-        }).to(svgElement, {
-          x: 0, // Vuelve a la posición inicial
-          rotation: 0,
-          duration: 0.1,
-          ease: "power1.inOut"
-        });
-      }
-    });
-  }
   },
 
   mounted() {
-    this.animateSVG();
     this.startTime = new Date().getTime(); // Inicializa el tiempo de inicio al montar el componente
   }
 };

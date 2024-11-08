@@ -35,12 +35,10 @@
   </div>
   <section class="mobile-section">
       <p>Entendemos tu negocio y te ayudamos a crecer dándote un excelente servicio y calidad.</p>
-    </section>
+  </section>
 </template>
 
 <script>
-import gsap from 'gsap'; // Importar GSAP
-
 export default {
   name: 'HeaderSection',
   mounted() {
@@ -88,17 +86,17 @@ export default {
         window.addEventListener('scroll', toggleArrowAndMenu);
         arrow.addEventListener('click', () => menu.classList.toggle('show-menu'));
 
-        // Trigger initial check on load
+        // Verificar el estado inicial al cargar
         updateArrowAndMenuVisibility(window.scrollY, previousScrollPosition, menu, arrow, arrowUp);
         previousScrollPosition = window.scrollY;
 
-        // Store the function reference for later removal
+        // Guardar la referencia de la función para eliminarla más tarde
         window.toggleArrowAndMenu = toggleArrowAndMenu;
 
       } else if (window.toggleArrowAndMenu) {
         window.removeEventListener('scroll', window.toggleArrowAndMenu);
 
-        // Ensure menu is hidden and arrow states are reset when exiting mobile view
+        // Restablecer el estado de los elementos al salir de la vista móvil
         menu.style.display = "none";
         arrow.style.display = "grid";
         arrowUp.style.display = "none";
@@ -108,7 +106,7 @@ export default {
     mediaQuery.addEventListener('change', handleMediaQueryChange);
     handleMediaQueryChange(mediaQuery);
 
-    // Update the section height on mount and on resize
+    // Actualizar la altura de la sección al montar y al cambiar el tamaño de la ventana
     const section1 = document.getElementById('inicio');
     const updateSection1Height = () => {
       const viewportHeight = window.innerHeight;
@@ -121,31 +119,34 @@ export default {
 
     updateSection1Height();
     window.addEventListener('resize', updateSection1Height);
-
-    // Animación de GSAP para SVG en montaje
-    this.animateSVG();
-  },
-  methods: {
-    animateSVG() {
-      // Asegúrate de que el SVG esté completamente cargado
-      this.$nextTick(() => {
-        const svgElement = document.querySelector('.first-container-svg img');
-        if (svgElement) {
-          gsap.set(svgElement, { visibility: 'visible', y: -150 });
-          gsap.to(svgElement, {
-            duration: 0.5,
-            opacity: 1,
-            y: 0,
-            delay: 0.5,
-            ease: 'bounce.out'
-          });
-        }
-      });
-    }
   }
 }
 </script>
 
 <style scoped>
-/* Añadir estilos relevantes aquí */
+.first-container-svg img {
+  opacity: 0;
+  transform: translateY(-150px);
+  animation: svgBounceIn 0.5s forwards 0.5s;
+}
+
+@keyframes svgBounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-150px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(15px);
+  }
+  80% {
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Añade otros estilos relevantes aquí */
 </style>
