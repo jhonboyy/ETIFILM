@@ -3,7 +3,7 @@
     <div class="form-container">
       <h2>Solicita tu presupuesto</h2>
       <p>Explícanos qué necesitas y te contactaremos lo antes posible.</p>
-      
+
       <form v-if="showForm && !submitting" class="contact-form" @submit.prevent="handleSubmit">
         <div class="form-field">
           <input
@@ -48,13 +48,13 @@
           />
         </div>
         <div class="form-field">
-          <textarea
+          <input
             v-model="formData.message"
             placeholder="Mensaje"
             name="message"
             class="input-text"
             required
-          ></textarea>
+          ></input>
         </div>
         <div class="form-field">
           <input
@@ -67,13 +67,16 @@
             ><a href="./privacidad">He leído y acepto la política de privacidad</a></label
           >
         </div>
+        <!-- Campo oculto dinámico -->
+        <input type="hidden" name="token" :value="token" />
+
         <div class="button-container">
-          <button class="button-send" type="submit">Enviar</button>
+          <button class="button-send" type="submit" :disabled="submitting || !jsEnabled">Enviar</button>
         </div>
-        <!-- Campo oculto (honeypot) -->
-        <div style="display: none;">
-          <label for="bot-field">Leave this field empty</label>
-          <input type="text" id="bot-field" v-model="botField" />
+        <!-- Campo honeypot mejorado -->
+        <div class="honeypot-field">
+          <label for="bot-field">Si ves este campo, por favor déjalo vacío</label>
+          <input type="text" id="bot-field" v-model="botField" name="bot-field" />
         </div>
         <!-- Campo oculto para medir el tiempo -->
         <input type="hidden" id="start-time" :value="startTime" />
@@ -113,6 +116,15 @@ export default {
     const errorMessage = ref('');
     const successMessage = ref('');
     const showForm = ref(true);
+    const jsEnabled = ref(false);
+    const token = ref(''); // Token generado en el cliente
+
+    const generateToken = () => {
+      // Genera un token único basado en la hora actual y una cadena aleatoria
+      const randomString = Math.random().toString(36).substring(2);
+      const timestamp = new Date().getTime().toString();
+      token.value = btoa(timestamp + ':' + randomString);
+    };
 
     const handleSubmit = async () => {
       submitting.value = true;
@@ -120,12 +132,10 @@ export default {
       successMessage.value = '';
 
       // Verifica el campo honeypot y el tiempo de sumisión
-      console.log('Start time:', startTime.value);
-
       const duration = new Date().getTime() - Number(startTime.value);
-      if (botField.value || duration < 3000) {
+      if (botField.value || duration < 5000) {
         // Ajusta el tiempo mínimo según sea necesario
-        errorMessage.value = 'Bot detectado!';
+        errorMessage.value = 'Bot detectado o tiempo de interacción insuficiente.';
         submitting.value = false;
         return;
       }
@@ -133,7 +143,7 @@ export default {
       const formToSend = {
         consentimiento: consentimiento.value ? '1' : '',
         ...formData,
-        botField: botField.value,
+        token: token.value,
         startTime: startTime.value,
       };
 
@@ -163,21 +173,22 @@ export default {
     };
 
     const resetForm = () => {
-      formData.name = '';
-      formData.email = '';
-      formData.company = '';
-      formData.phone = '';
-      formData.message = '';
+      Object.keys(formData).forEach((key) => {
+        formData[key] = '';
+      });
       consentimiento.value = false;
       botField.value = ''; // Resetea el campo honeypot
       errorMessage.value = '';
       successMessage.value = '';
       showForm.value = true;
       startTime.value = ''; // Resetea el tiempo de inicio
+      generateToken(); // Genera un nuevo token
     };
 
     onMounted(() => {
       startTime.value = new Date().getTime(); // Inicializa el tiempo de inicio al montar el componente
+      generateToken(); // Genera el token inicial
+      jsEnabled.value = true;
     });
 
     return {
@@ -190,11 +201,20 @@ export default {
       successMessage,
       showForm,
       handleSubmit,
+      jsEnabled,
+      token,
     };
   },
 };
 </script>
 
 <style scoped>
+/* Mejora del honeypot */
+.honeypot-field {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
+
 /* Añade tus estilos aquí */
 </style>
