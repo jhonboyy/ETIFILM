@@ -5,125 +5,196 @@
       <p>Explícanos qué necesitas y te contactaremos lo antes posible.</p>
       
       <form v-if="showForm && !submitting" class="contact-form" @submit.prevent="handleSubmit">
-        <div class="form-field" v-for="field in formFields" :key="field.id">
-          <input :type="field.type" v-model="field.value" :placeholder="field.placeholder" :name="field.name" :class="field.inputClass" :pattern="field.pattern" :inputmode="field.inputMode" required>
+        <div class="form-field">
+          <input
+            type="text"
+            v-model="formData.name"
+            placeholder="Tu nombre"
+            name="name"
+            class="input-text"
+            required
+          />
         </div>
         <div class="form-field">
-          <input type="checkbox" id="consentimiento" v-model="consentimiento" required>
-          <label for="consentimiento"><a href="./privacidad">He leído y acepto la política de privacidad</a></label>
+          <input
+            type="email"
+            v-model="formData.email"
+            placeholder="Tu correo"
+            name="email"
+            class="input-text"
+            required
+          />
         </div>
-        
+        <div class="form-field">
+          <input
+            type="text"
+            v-model="formData.company"
+            placeholder="Empresa"
+            name="company"
+            class="input-text"
+            required
+          />
+        </div>
+        <div class="form-field">
+          <input
+            type="tel"
+            v-model="formData.phone"
+            placeholder="Teléfono"
+            name="phone"
+            class="input-text"
+            pattern="\d*"
+            inputmode="numeric"
+            required
+          />
+        </div>
+        <div class="form-field">
+          <textarea
+            v-model="formData.message"
+            placeholder="Mensaje"
+            name="message"
+            class="input-text"
+            required
+          ></textarea>
+        </div>
+        <div class="form-field">
+          <input
+            type="checkbox"
+            id="consentimiento"
+            v-model="consentimiento"
+            required
+          />
+          <label for="consentimiento"
+            ><a href="./privacidad">He leído y acepto la política de privacidad</a></label
+          >
+        </div>
         <div class="button-container">
           <button class="button-send" type="submit">Enviar</button>
         </div>
-
         <!-- Campo oculto (honeypot) -->
-        <div style="display:none;">
+        <div style="display: none;">
           <label for="bot-field">Leave this field empty</label>
-          <input type="text" id="bot-field" v-model="botField">
+          <input type="text" id="bot-field" v-model="botField" />
         </div>
-
         <!-- Campo oculto para medir el tiempo -->
-        <input type="hidden" id="start-time" :value="startTime">
+        <input type="hidden" id="start-time" :value="startTime" />
       </form>
 
       <div v-if="submitting" class="message success">Enviando el formulario...</div>
       <div v-if="successMessage" class="message success">{{ successMessage }}</div>
       <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
     </div>
-    
+
     <div class="contact-container-svg">
-      <img alt="ilustración de un personaje atrapado siendo embalado en una caja de film" src="public/images/Etifilm_5.svg">
+      <img
+        alt="Ilustración de un personaje atrapado siendo embalado en una caja de film"
+        src="/images/Etifilm_5.svg"
+      />
     </div>
   </section>
 </template>
 
 <script>
+import { ref, reactive, onMounted } from 'vue';
+
 export default {
   name: 'ContactSection',
-  data() {
-    return {
-      consentimiento: false,
-      formFields: [
-        { id: 'name', type: 'text', value: '', placeholder: 'Tu nombre', name: 'name', inputClass: 'input-text', label: 'Nombre' },
-        { id: 'email', type: 'email', value: '', placeholder: 'Tu correo', name: 'email', inputClass: 'input-text', label: 'Correo' },
-        { id: 'company', type: 'text', value: '', placeholder: 'Empresa', name: 'company', inputClass: 'input-text', label: 'Empresa' },
-        { id: 'phone', type: 'tel', value: '', placeholder: 'Teléfono', name: 'phone', inputClass: 'input-text', label: 'Teléfono', pattern: '\\d*', inputMode: 'numeric' },
-        { id: 'message', type: 'textarea', value: '', placeholder: 'Mensaje', name: 'message', inputClass: 'input-text', label: 'Mensaje' }
-      ],
-      botField: '', // Campo honeypot
-      startTime: '', // Tiempo de inicio
-      submitting: false,
-      errorMessage: '',
-      successMessage: '',
-      showForm: true,
-      showRecaptcha: true // Asegúrate de controlar la visibilidad según necesites
-    };
-  },
-  methods: {
-    handleSubmit() {
-      this.submitting = true;
-      this.errorMessage = '';
-      this.successMessage = '';
+  setup() {
+    const consentimiento = ref(false);
+    const formData = reactive({
+      name: '',
+      email: '',
+      company: '',
+      phone: '',
+      message: '',
+    });
+    const botField = ref(''); // Campo honeypot
+    const startTime = ref(''); // Tiempo de inicio
+    const submitting = ref(false);
+    const errorMessage = ref('');
+    const successMessage = ref('');
+    const showForm = ref(true);
+
+    const handleSubmit = async () => {
+      submitting.value = true;
+      errorMessage.value = '';
+      successMessage.value = '';
 
       // Verifica el campo honeypot y el tiempo de sumisión
-      console.log('Start time:', this.startTime);
+      console.log('Start time:', startTime.value);
 
-      const duration = new Date().getTime() - Number(this.startTime);
-      if (this.botField || duration < 3000) { // Ajusta el tiempo mínimo según sea necesario
-        this.errorMessage = 'Bot detected!';
-        this.submitting = false;
+      const duration = new Date().getTime() - Number(startTime.value);
+      if (botField.value || duration < 3000) {
+        // Ajusta el tiempo mínimo según sea necesario
+        errorMessage.value = 'Bot detectado!';
+        submitting.value = false;
         return;
       }
 
-      const formData = {
-        consentimiento: this.consentimiento ? '1' : '',
-        ...this.formFields.reduce((acc, field) => ({ ...acc, [field.name]: field.value }), {}),
-        botField: this.botField,
-        startTime: this.startTime
+      const formToSend = {
+        consentimiento: consentimiento.value ? '1' : '',
+        ...formData,
+        botField: botField.value,
+        startTime: startTime.value,
       };
 
-      console.log('Sending form data:', formData);
+      console.log('Enviando datos del formulario:', formToSend);
 
-      $fetch('/api/send-mail', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => {
+      try {
+        const response = await $fetch('/api/send-mail', {
+          method: 'POST',
+          body: JSON.stringify(formToSend),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
         if (response.success) {
-          this.successMessage = response.message;
-          this.showForm = false;
-          setTimeout(this.resetForm, 3000);
+          successMessage.value = response.message;
+          showForm.value = false;
+          setTimeout(resetForm, 3000);
         } else {
-          this.errorMessage = response.message;
-          setTimeout(this.resetForm, 3000);
+          errorMessage.value = response.message;
+          setTimeout(resetForm, 3000);
         }
-      })
-      .catch(error => {
-        this.errorMessage = `Error al enviar el formulario: ${error.message}`;
-        setTimeout(this.resetForm, 3000);
-      })
-      .finally(() => {
-        this.submitting = false;
-      });
-    },
+      } catch (error) {
+        errorMessage.value = `Error al enviar el formulario: ${error.message}`;
+        setTimeout(resetForm, 3000);
+      } finally {
+        submitting.value = false;
+      }
+    };
 
-    resetForm() {
-      this.formFields.forEach(field => {
-        field.value = '';
-      });
-      this.consentimiento = false;
-      this.botField = ''; // Resetea el campo honeypot
-      this.errorMessage = '';
-      this.successMessage = '';
-      this.showForm = true;
-      this.startTime = ''; // Resetea el tiempo de inicio
-    },
+    const resetForm = () => {
+      formData.name = '';
+      formData.email = '';
+      formData.company = '';
+      formData.phone = '';
+      formData.message = '';
+      consentimiento.value = false;
+      botField.value = ''; // Resetea el campo honeypot
+      errorMessage.value = '';
+      successMessage.value = '';
+      showForm.value = true;
+      startTime.value = ''; // Resetea el tiempo de inicio
+    };
+
+    onMounted(() => {
+      startTime.value = new Date().getTime(); // Inicializa el tiempo de inicio al montar el componente
+    });
+
+    return {
+      consentimiento,
+      formData,
+      botField,
+      startTime,
+      submitting,
+      errorMessage,
+      successMessage,
+      showForm,
+      handleSubmit,
+    };
   },
-
-  mounted() {
-    this.startTime = new Date().getTime(); // Inicializa el tiempo de inicio al montar el componente
-  }
 };
 </script>
+
+<style scoped>
+/* Añade tus estilos aquí */
+</style>

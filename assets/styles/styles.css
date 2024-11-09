@@ -588,7 +588,7 @@ button > .arrow-right {
    }
 	.container-arrow {
 		position: fixed;
-		display: none;
+		display: flex;
 		bottom: 0;
 		width: 100%;
 		height: auto;
@@ -600,7 +600,7 @@ button > .arrow-right {
 		width: 6%;
    }
 	.container-arrow-up {
-		display: none;
+		display: flex;
 		position: fixed;
 		height: 10%;
 		bottom: 0;
