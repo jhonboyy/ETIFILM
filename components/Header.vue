@@ -59,6 +59,8 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { throttle } from 'lodash-es';
+
 
 export default {
   name: 'HeaderSection',
@@ -73,7 +75,7 @@ export default {
 
     const section1 = ref(null);
 
-    const updateSection1Height = () => {
+    const updateSection1Height = throttle(() => {
       if (typeof window !== 'undefined') {
         const viewportHeight = window.innerHeight;
         const footer = document.querySelector('footer');
@@ -82,17 +84,17 @@ export default {
           section1.value.style.height = `${viewportHeight - navBarHeight}px`;
         }
       }
-    };
+    }, 200);
 
     const handleMediaQueryChange = (event) => {
       isMobile.value = event.matches;
     };
 
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       if (typeof window !== 'undefined') {
         scrollPosition.value = window.scrollY;
       }
-    };
+    }, 200);
 
     onMounted(() => {
       if (typeof window !== 'undefined') {
