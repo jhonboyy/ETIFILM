@@ -85,6 +85,12 @@
       <div v-if="successMessage" class="message success">{{ successMessage }}</div>
       <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
     </div>
+    <div class="contact-container-svg">
+      <img
+        alt="Ilustración de un personaje atrapado siendo embalado en una caja de film"
+        src="/images/Etifilm_5.svg"
+      />
+    </div>
   </section>
 </template>
 
