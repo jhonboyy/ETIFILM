@@ -81,10 +81,10 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const mailMode = process.env.MAIL_MODE
 
-  if (mailMode === 'mailhog') {
+  if (mailMode === 'maildev') {
     transporter = nodemailer.createTransport({
-      host: config.private.mailhogHost || 'localhost',
-      port: config.private.mailhogPort || 1025,
+      host: '127.0.0.1',
+      port: 1025,
     } as nodemailer.TransportOptions);
     mailOptions = {
       from: `"${name}" <${email}>`,
