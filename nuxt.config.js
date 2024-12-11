@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       site: {
-        url: 'https://example.com'
+        url: 'https://etifilm.com'
       },
       recaptchaSiteKey: process.env.VUE_APP_RECAPTCHA_PUBLIC_KEY || '',
       mailRecipient: process.env.MAIL_RECIPIENT || '',
@@ -49,11 +49,9 @@ export default defineNuxtConfig({
       },
       meta: [
         { charset: 'utf-8' },
-        // ... rest of your meta tags
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/images/etifilm-favicon.svg' },
-        // ... rest of your link tags
       ]
     }
   },
