@@ -8,7 +8,7 @@
 	--font-size-h4: 1.7em;
 	--font-size-p: 1.7em;
 	--font-size-a: 1.2em;
-	--font-family: 'AcidGrotesk';
+	--font-family: 'FFF Acid Grotesk';
 }
 input{
 	pointer-events: auto;
@@ -60,10 +60,12 @@ button, input {
 	font-size: var(--font-size-a);
 }
 @font-face {
-	font-family: 'AcidGrotesk';
-	src: local('AcidGrotesk'), url('assets/fonts/FFF-AcidGrotesk-Light-TRIAL.otf') format('opentype');
+	font-family: 'FFF Acid Grotesk';
+	src: url('/fonts/FFF-AcidGrotesk-Light.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
 	font-display: swap;
-}
+  }
 /* ///////////////////////////////////////////////////// SECTION 1 ///////////////////////////////////////////////////// */
 .section-1 {
 	height: 100vh;
